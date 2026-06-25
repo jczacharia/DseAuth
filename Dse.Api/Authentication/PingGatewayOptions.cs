@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Dse.Api.Authentication;
 
 /// Bound from the "PingGateway" configuration section. The Ping Gateway (PingAccess) authenticates the user
@@ -5,6 +7,7 @@ namespace Dse.Api.Authentication;
 public sealed class PingGatewayOptions
 {
     /// Cookie carrying the gateway-issued JWT (dse-deploy: PING_TOKEN_NAME, e.g. "PA.APP_DSE").
+    [Required]
     public string CookieName { get; init; } = "PA.APP_DSE";
 
     /// Optional header fallback (some gateways inject a header instead of/alongside the cookie, e.g. "ifs_jwt").

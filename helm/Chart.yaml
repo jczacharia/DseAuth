@@ -6,11 +6,11 @@ version: 0.1.0
 appVersion: "1.0.0"
 
 # Umbrella chart: the PNC shared application chart is pulled in as a dependency and aliased to the app
-# name, so all overrides nest under the "dseapi:" key in values.yaml (same pattern as searchapi).
-# TODO: copy the exact name / version / repository from the searchapi project's Chart.yaml — these are
-# the PNC internal chart coordinates and must match what your pipeline resolves.
+# name, so all overrides nest under the "dseapi:" key in values.yaml (same pattern as dse-deploy/searchapi).
+# Coordinates taken from the dse-deploy repo's charts/dse-deploy/Chart.yaml.
 dependencies:
-  - name: <pnc-shared-app-chart>     # e.g. the chart searchapi depends on
-    version: <x.y.z>
-    repository: <oci://docker-stage.docker.pncint.net/... or https helm repo>
+  - name: pnc-ddp-pnc-charts
+    version: 0.2.4+2.04c2c4a
+    path: pnc/ddp/pnc-charts/pnc-ddp-pnc-charts
+    repository: https://rpo.pncint.net/artifactory/helm-release
     alias: dseapi

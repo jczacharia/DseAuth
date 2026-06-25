@@ -9,11 +9,13 @@ namespace Dse.Api.Authentication;
 internal sealed class JwksConfigurationRetriever : IConfigurationRetriever<OpenIdConnectConfiguration>
 {
     public async Task<OpenIdConnectConfiguration> GetConfigurationAsync(
-        string address, IDocumentRetriever retriever, CancellationToken cancel)
+        string address,
+        IDocumentRetriever retriever,
+        CancellationToken cancel)
     {
-        string json = await retriever.GetDocumentAsync(address, cancel);
+        var json = await retriever.GetDocumentAsync(address, cancel);
         var config = new OpenIdConnectConfiguration { JwksUri = address, JsonWebKeySet = JsonWebKeySet.Create(json) };
-        foreach (SecurityKey key in config.JsonWebKeySet.GetSigningKeys())
+        foreach (var key in config.JsonWebKeySet.GetSigningKeys())
         {
             config.SigningKeys.Add(key);
         }
