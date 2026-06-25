@@ -1,0 +1,109 @@
+# Overrides for the PNC shared app chart (aliased "dseapi" in Chart.yaml). Mirrors the searchapi schema.
+# Placeholders to confirm: mnemonic, namespace, image repo path, and the route hostnames (from MIS/Ping/F5).
+dseapi:
+  namespace: dse-rnd
+  environment: rnd
+  mnemonic: dse
+
+  port: &port 8080
+  nameOverride: dseapi
+
+  image:
+    port: *port
+    name: 'docker-stage.docker.pncint.net/pnc/dse/dseapi'
+
+  service:
+    annotations:
+      name: dseapi
+      namespace: dse-rnd
+    labels:
+      app: dseapi
+      mnemonic: dse
+    create: true
+    port: 8080
+    targetPort: *port
+
+  deployment:
+    create: true
+    replicas: 1
+    vpa:
+      create: true
+      updatePolicy:
+        updateMode: 'Initial'
+    pod:
+      contrast:
+        enable: false
+        appName: dseapi
+        appType: dotnet-core
+      # .NET respects the cgroup memory *limit* for GC sizing, not the request.
+      # VPA-Initial rewrites requests on each pod start; limits stay as-is.
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+        requests:
+          cpu: 250m
+          memory: 1Gi
+      env:
+        - name: DEPLOYMENT_ENVIRONMENT
+          value: RND
+        - name: ASPNETCORE_HTTP_PORTS
+          value: '8080'
+        # Egress proxy (Apache/Azure doc). NO_PROXY keeps internal traffic (Ping JWKS, in-cluster) direct.
+        # NO_PROXY matches subdomains by leading dot; no wildcards.
+        - name: NO_PROXY
+          value: '.pncint.net,.pnc.com,localhost,127.0.0.1,.svc,.svc.cluster.local,.cluster.local'
+        # Set only if pods lack direct egress (env-specific):
+        # - name: HTTP_PROXY
+        #   value: 'http://proxy.pncbank.com:8080'
+        # - name: HTTPS_PROXY
+        #   value: 'http://proxy.pncbank.com:8080'
+        # Ping Gateway values (non-secret; ASP.NET binds __-delimited keys to config). Mirrors the
+        # dse-deploy contract: PING_TOKEN_NAME / PING_JWKS_ENDPOINT / PINGIDENTITY_AUDIENCE.
+        - name: PingGateway__CookieName
+          value: 'PA.APP_DSE'
+        - name: PingGateway__JwksUri
+          value: 'https://wfsso-apps-rnd.pnc.com/ext/JwtSigning'
+        - name: PingGateway__Audience
+          value: 'wf-rnd'
+      envFrom:
+        - secretRef: dseapi-secrets
+          optional: false
+      probes:
+        # /api/live = self-only (no dependencies) for startup + liveness; /api/ready runs registered
+        # health checks for readiness. Probes hit the pod directly, so both are AllowAnonymous in code.
+        startupProbe:
+          httpGet:
+            path: /api/live
+            port: 8080
+            scheme: HTTP
+          failureThreshold: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /api/live
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/ready
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 3
+
+  route:
+    # Doc's Case 2: the OCP auto host (direct, for non-Ping verification) + the friendly host the Ping
+    # Gateway forwards to after authenticating. Confirm exact hostnames with MIS/Ping/F5.
+    hosts:
+      - uri: dseapi-dse-rnd.apps.ethe-ocp4-rnd.pncint.net
+        name: dseapi
+      - uri: dse-rnd.pncint.net
+        name: dseapi-ingress
+        tls:
+          termination: edge

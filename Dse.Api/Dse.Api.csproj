@@ -4,13 +4,32 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>dse-api-sso</UserSecretsId>
+    </PropertyGroup>
+
+    <!-- Development only: SpaProxy launches the Angular dev server and proxies to it. In the container
+         (Production) it is inert and UseStaticFiles/MapFallbackToFile serves the prebuilt wwwroot. -->
+    <PropertyGroup>
+        <SpaRoot>../Client</SpaRoot>
+        <SpaProxyServerUrl>http://localhost:4200</SpaProxyServerUrl>
+        <SpaProxyLaunchCommand>pnpm start</SpaProxyLaunchCommand>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.9" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9"/>
+        <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="10.0.9" />
     </ItemGroup>
+
+    <!-- Release builds compile the Angular app into wwwroot (angular.json outputPath = ../Dse.Api/wwwroot),
+         so `dotnet publish -c Release` produces a self-contained image input. Runs before the SDK gathers
+         static web assets. Requires node + pnpm on the build agent; pass -p:SkipSpaBuild=true to opt out
+         (e.g. when the pipeline builds the SPA in a separate step). Debug builds skip it — dev uses SpaProxy. -->
+    <Target Name="BuildSpa" BeforeTargets="Build"
+            Condition="'$(Configuration)' == 'Release' and '$(SkipSpaBuild)' != 'true'">
+        <Message Importance="high" Text="Building Angular SPA from $(SpaRoot) into wwwroot..." />
+        <Exec WorkingDirectory="$(SpaRoot)" Command="pnpm install --frozen-lockfile"
+              Condition="!Exists('$(SpaRoot)/node_modules')" />
+        <Exec WorkingDirectory="$(SpaRoot)" Command="pnpm run build" />
+    </Target>
 
 </Project>

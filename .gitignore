@@ -3,3 +3,6 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+
+# Angular build output is emitted here by `ng build` (see Client/angular.json outputPath).
+Dse.Api/wwwroot/

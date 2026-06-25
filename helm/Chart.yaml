@@ -1,0 +1,16 @@
+apiVersion: v2
+name: dse
+description: DSE API + Angular SPA, deployed behind the PNC Ping Gateway
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+# Umbrella chart: the PNC shared application chart is pulled in as a dependency and aliased to the app
+# name, so all overrides nest under the "dseapi:" key in values.yaml (same pattern as searchapi).
+# TODO: copy the exact name / version / repository from the searchapi project's Chart.yaml — these are
+# the PNC internal chart coordinates and must match what your pipeline resolves.
+dependencies:
+  - name: <pnc-shared-app-chart>     # e.g. the chart searchapi depends on
+    version: <x.y.z>
+    repository: <oci://docker-stage.docker.pncint.net/... or https helm repo>
+    alias: dseapi

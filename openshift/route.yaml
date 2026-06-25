@@ -1,0 +1,48 @@
+# Case 2 (preferred) from the Ping Gateway doc, translated for the Dse.Api pod that serves BOTH the
+# Angular SPA and the API. Replace <namespace>/hostnames with the DNS the MIS/Ping/F5 teams create.
+#
+# Two routes per the doc:
+#   1. ping route  — friendly host the Ping Gateway forwards to after it authenticates the user.
+#   2. ocp  route  — direct OpenShift host for verifying the app WITH or WITHOUT Ping (de-coupling).
+#
+# The Apache `Proxyset stickysession=JSESSIONID` becomes router session affinity here. Dse.Api validates
+# the per-request Ping JWT and is otherwise stateless, so affinity only matters if/when server-side
+# session state (e.g. cached refresh tokens) is introduced; the annotations below pin a client to a pod.
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: dse-ping
+  namespace: <namespace>
+  annotations:
+    haproxy.router.openshift.io/balance: roundrobin
+    haproxy.router.openshift.io/disable_cookies: "false" # router inserts an affinity cookie (sticky session)
+spec:
+  host: dse-rnd.pncint.net # friendly public name -> Ping Gateway forwards here post-auth
+  to:
+    kind: Service
+    name: dse-api
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: dse-ocp
+  namespace: <namespace>
+  annotations:
+    haproxy.router.openshift.io/balance: roundrobin
+    haproxy.router.openshift.io/disable_cookies: "false"
+spec:
+  host: dse-ocp-rnd.pncint.net # direct OCP host (F5 VIP -> infra nodes) for non-Ping verification
+  to:
+    kind: Service
+    name: dse-api
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
