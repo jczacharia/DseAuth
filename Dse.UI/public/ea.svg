@@ -1,0 +1,40 @@
+<svg viewBox="0 0 107 70" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .txt {
+      font-weight: 700;
+      font-size: 100px;
+      font-family: Segoe UI, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+    }
+    .e {
+      fill: #d26000;
+    }
+    .a {
+      fill: #0069aa;
+    }
+    @media (prefers-color-scheme: dark) {
+      .e {
+        fill: #f79f69;
+      }
+      .a {
+        fill: #9cccff;
+      }
+    }
+    .e:is(.light *, [theme='light'] *) {
+      fill: #d26000;
+    }
+    .a:is(.light *, [theme='light'] *) {
+      fill: #0069aa;
+    }
+    .e:is(.dark *, [theme='dark'] *) {
+      fill: #f79f69;
+    }
+    .a:is(.dark *, [theme='dark'] *) {
+      fill: #9cccff;
+    }
+  </style>
+
+  <text class="txt e" x="-7" y="70">E</text>
+  <text class="txt a" x="37" y="70">A</text>
+</svg>

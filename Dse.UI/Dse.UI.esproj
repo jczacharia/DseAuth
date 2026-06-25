@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.5906584">
+  <PropertyGroup>
+    <!-- `dotnet run` / IDE launch on this project starts the Angular dev server (ng serve, :4200). -->
+    <StartupCommand>pnpm start</StartupCommand>
+    <!-- Publish runs this to produce the production bundle. Two settings must agree on the destination:
+         angular.json's outputPath is where `ng build` *writes* (../Dse.Api/wwwroot); BuildOutputFolder is
+         what the JSPS SDK hands to the referencing Dse.Api project as static web assets on publish.
+         Drop BuildOutputFolder and the SPA builds but never gets packaged into the publish output. -->
+    <BuildCommand>pnpm run build</BuildCommand>
+    <BuildOutputFolder>$(MSBuildProjectDirectory)/../Dse.Api/wwwroot</BuildOutputFolder>
+    <!-- No compile on Build: dev uses the dev server; the production bundle is produced on Publish. -->
+    <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <!-- pnpm workspace + catalogs: JSPS must never run `npm install` (see RestoreSpa). -->
+    <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
+    <!-- Vitest specs surface in the Visual Studio / Rider Test Explorer once test wiring lands. -->
+    <JavaScriptTestFramework>Vitest</JavaScriptTestFramework>
+    <JavaScriptTestRoot>$(MSBuildProjectDirectory)/src</JavaScriptTestRoot>
+  </PropertyGroup>
+
+    <Target Name="DisplayMessages" AfterTargets="AfterRestore">
+        <Message Text="Project File Name = $(MSBuildProjectFile)" />
+        <Message Text="Project Dir = $(MSBuildProjectDirectory)" />
+    </Target>
+
+  <!-- JSPS can't install a pnpm workspace; restore with pnpm before MSBuild restore.
+       Mirrors the former BuildSpa contract: frozen lockfile, only when node_modules is absent. -->
+  <Target
+    Name="RestoreSpa"
+    BeforeTargets="BeforeRestore"
+    Condition="!Exists('$(MSBuildProjectDirectory)/node_modules')"
+  >
+    <!-- prettier-ignore -->
+    <Exec Command="npx --yes -p node@26.4.0 -p pnpm@11 -c &quot;pnpm ci&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+</Project>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 115 115">
+  <style>
+    .__logo_lens {
+      stroke: oklch(50% 0.07 246);
+    }
+    .__logo_handle {
+      stroke: oklch(50% 0.07 246);
+    }
+    .__logo_bg {
+      fill: white;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .__logo_lens {
+        stroke: oklch(60% 0.07 246);
+      }
+      .__logo_handle {
+        stroke: oklch(60% 0.07 246);
+      }
+      .__logo_bg {
+        fill: oklch(0 0.01 52.3);
+      }
+    }
+
+    .__logo_lens:is(.light *, [theme='light'] *) {
+      stroke: oklch(50% 0.07 246);
+    }
+    .__logo_handle:is(.light *, [theme='light'] *) {
+      stroke: oklch(50% 0.07 246);
+    }
+    .__logo_bg:is(.light *, [theme='light'] *) {
+      fill: white;
+    }
+
+    .__logo_lens:is(.dark *, [theme='dark'] *) {
+      stroke: oklch(60% 0.07 246);
+    }
+    .__logo_handle:is(.dark *, [theme='dark'] *) {
+      stroke: oklch(60% 0.07 246);
+    }
+    .__logo_bg:is(.dark *, [theme='dark'] *) {
+      fill: oklch(0 0.01 52.3);
+    }
+  </style>
+
+  <defs>
+    <clipPath id="lensClip">
+      <circle cx="47" cy="47" r="43" />
+    </clipPath>
+    <radialGradient id="lensSheen" cx="32%" cy="28%" r="60%">
+      <stop offset="0%" stop-color="oklch(100% 0.01 52)" stop-opacity="1" />
+      <stop offset="60%" stop-color="oklch(100% 0.01 52)" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Short Lucide-style handle (drawn first so lens overlaps) -->
+  <line x1="73.3" y1="73.3" x2="108" y2="108" class="__logo_handle" stroke-width="14" stroke-linecap="round" />
+
+  <!-- Lens body — white fill makes swoosh read as background -->
+  <circle cx="47" cy="47" r="43" fill="oklch(0.8 0.1 52)" />
+  <circle cx="47" cy="47" r="35.5" fill="#ffffff" />
+
+  <!-- PNC swoosh as background element inside lens -->
+  <g clip-path="url(#lensClip)">
+    <g transform="translate(47,47) scale(0.057) translate(-783,-783)">
+      <path
+        fill="#f58025"
+        d="M783.1 1565.8c-433.1 0-783.1-350-783.1-782.9 0-432.9 350-782.9 783.1-782.9 433 0 783.1 350 783.1 782.9 0 432.9-350.1 782.9-783.1 782.9zm580.2-636.5c-56.3 16.9-118.3 22.6-197.1 22.6h-529.6c-28.2 0-50.7-11.3-67.6-28.2l-78.9 140.8c-84.5 152.1-107 264.7-61.9 309.8 33.8 33.8 118.3 33.8 191.5-11.3l22.5-16.9c411.3-230.9 619.7-349.2 721.1-416.8zm-1002.7 281.7c11.2-56.4 39.4-112.7 78.8-180.3l264.8-456.2c11.3-22.5 33.8-39.4 56.3-45.1l-78.8-140.8c-84.5-146.4-174.7-225.3-236.6-208.4-50.7 11.3-84.5 84.5-84.5 169 0 473.1 0 743.5 0 861.8zm1109.8-428.1c11.2-45.1-33.8-112.6-107.1-157.7l-22.5-11.3c-405.6-236.5-614.1-354.8-721.1-411.1 33.8 39.4 73.2 90.1 112.7 157.7l264.8 461.8c16.9 28.2 16.9 50.7 11.2 73.2h163.4c174.6 0 281.7-39.4 298.6-112.6z"
+      />
+    </g>
+  </g>
+
+  <circle cx="47" cy="47" r="43" fill="none" class="__logo_lens" stroke-width="8" />
+  <circle cx="47" cy="47" r="39" fill="url(#lensSheen)" clip-path="url(#lensClip)" />
+  <circle cx="47" cy="47" r="37.3" fill="none" stroke="oklch(1 0 0 / 100%)" stroke-width="3.5" opacity="0.3" />
+</svg>

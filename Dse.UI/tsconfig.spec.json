@@ -1,0 +1,12 @@
+/* Angular unit tests (Vitest via @angular/build:unit-test). */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "sourceMap": true,
+    "inlineSources": true,
+    "noUncheckedIndexedAccess": false,
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
+  },
+  "include": ["src/**/*.ts"]
+}

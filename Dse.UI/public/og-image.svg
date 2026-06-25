@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <title>Enterprise Search — Open Graph Image</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1f3a" />
+      <stop offset="100%" stop-color="#142b4d" />
+    </linearGradient>
+    <radialGradient id="glow" cx="80%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#f58025" stop-opacity="0.22" />
+      <stop offset="60%" stop-color="#f58025" stop-opacity="0" />
+    </radialGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8" />
+      <feOffset dx="0" dy="6" result="off" />
+      <feComponentTransfer><feFuncA type="linear" slope="0.25" /></feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect width="1200" height="630" fill="url(#glow)" />
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+    <path d="M0 80 H1200 M0 160 H1200 M0 240 H1200 M0 320 H1200 M0 400 H1200 M0 480 H1200 M0 560 H1200" />
+    <path
+      d="M80 0 V630 M160 0 V630 M240 0 V630 M320 0 V630 M400 0 V630 M480 0 V630 M560 0 V630 M640 0 V630 M720 0 V630 M800 0 V630 M880 0 V630 M960 0 V630 M1040 0 V630 M1120 0 V630"
+    />
+  </g>
+  
+  <style>
+      .__logo_lens { stroke: #5d7891; }
+      .__logo_handle { stroke: #506a82; }
+      .__logo_bg { fill: #000000; }
+  </style>
+
+
+
+  <!-- PNC mark, top-left brand anchor -->
+  <g transform="translate(35,50) scale(1)">
+  <defs>
+    <clipPath id="lensClip">
+      <circle cx="47" cy="47" r="43" />
+    </clipPath>
+    <radialGradient id="lensSheen" cx="32%" cy="28%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+      <stop offset="60%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Short Lucide-style handle (drawn first so lens overlaps) -->
+  <line x1="73.3" y1="73.3" x2="94" y2="94" class="__logo_handle" stroke-width="12" stroke-linecap="round" />
+
+  <!-- Lens body — white fill makes swoosh read as background -->
+  <circle cx="47" cy="47" r="43" fill="#e9a877" />
+  <circle cx="47" cy="47" r="35.5" fill="#ffffff" />
+
+  <!-- PNC swoosh as background element inside lens -->
+  <g clip-path="url(#lensClip)">
+    <g transform="translate(47,47) scale(0.057) translate(-783,-783)">
+      <path
+        fill="#f58025"
+        d="M783.1 1565.8c-433.1 0-783.1-350-783.1-782.9 0-432.9 350-782.9 783.1-782.9 433 0 783.1 350 783.1 782.9 0 432.9-350.1 782.9-783.1 782.9zm580.2-636.5c-56.3 16.9-118.3 22.6-197.1 22.6h-529.6c-28.2 0-50.7-11.3-67.6-28.2l-78.9 140.8c-84.5 152.1-107 264.7-61.9 309.8 33.8 33.8 118.3 33.8 191.5-11.3l22.5-16.9c411.3-230.9 619.7-349.2 721.1-416.8zm-1002.7 281.7c11.2-56.4 39.4-112.7 78.8-180.3l264.8-456.2c11.3-22.5 33.8-39.4 56.3-45.1l-78.8-140.8c-84.5-146.4-174.7-225.3-236.6-208.4-50.7 11.3-84.5 84.5-84.5 169 0 473.1 0 743.5 0 861.8zm1109.8-428.1c11.2-45.1-33.8-112.6-107.1-157.7l-22.5-11.3c-405.6-236.5-614.1-354.8-721.1-411.1 33.8 39.4 73.2 90.1 112.7 157.7l264.8 461.8c16.9 28.2 16.9 50.7 11.2 73.2h163.4c174.6 0 281.7-39.4 298.6-112.6z"
+      />
+    </g>
+  </g>
+
+  <circle cx="47" cy="47" r="43" fill="none" class="__logo_lens" stroke-width="8" />
+  <circle cx="47" cy="47" r="39" fill="url(#lensSheen)" clip-path="url(#lensClip)" />
+  <circle cx="47" cy="47" r="37.3" fill="none" stroke="#ffffff" stroke-width="3.5" opacity="0.3" />
+  </g>
+
+  <!-- Brand line next to PNC mark -->
+  <g font-family="Inter, -apple-system, Segoe UI, sans-serif">
+    <text x="160" y="92" fill="#ffffff" font-size="20" font-weight="500" letter-spacing="2">PNC</text>
+    <text x="160" y="118" fill="#f58025" font-size="12" font-weight="500" letter-spacing="4" text-transform="uppercase">
+      INTERNAL TOOLING
+    </text>
+  </g>
+
+  <!-- Headline -->
+  <g font-family="Inter, -apple-system, Segoe UI, sans-serif">
+    <text x="80" y="285" fill="#ffffff" font-size="84" font-weight="200" letter-spacing="-2">Enterprise</text>
+    <text x="80" y="385" font-size="84" font-weight="600" letter-spacing="-2">
+      <tspan fill="#ffffff">Search</tspan><tspan fill="#f58025">.</tspan>
+    </text>
+    <text x="80" y="455" fill="#a8b8d0" font-size="24" font-weight="300" letter-spacing="0.2">
+      Find anything across PNC — in one place.
+    </text>
+  </g>
+
+  <!-- Search bar mock, anchored bottom-left -->
+  <g transform="translate(80,510)" filter="url(#softShadow)">
+    <rect x="0" y="0" width="720" height="64" rx="32" fill="#ffffff" />
+    <!-- PNC token left -->
+    <g transform="translate(32,32) scale(0.02) translate(-783,-783)">
+      <circle cx="783.1" cy="782.9" r="749.3" fill="#ffffff" />
+      <path
+        fill="#f58025"
+        d="M783.1 1565.8c-433.1 0-783.1-350-783.1-782.9 0-432.9 350-782.9 783.1-782.9 433 0 783.1 350 783.1 782.9 0 432.9-350.1 782.9-783.1 782.9zm580.2-636.5c-56.3 16.9-118.3 22.6-197.1 22.6h-529.6c-28.2 0-50.7-11.3-67.6-28.2l-78.9 140.8c-84.5 152.1-107 264.7-61.9 309.8 33.8 33.8 118.3 33.8 191.5-11.3l22.5-16.9c411.3-230.9 619.7-349.2 721.1-416.8zm-1002.7 281.7c11.2-56.4 39.4-112.7 78.8-180.3l264.8-456.2c11.3-22.5 33.8-39.4 56.3-45.1l-78.8-140.8c-84.5-146.4-174.7-225.3-236.6-208.4-50.7 11.3-84.5 84.5-84.5 169 0 473.1 0 743.5 0 861.8zm1109.8-428.1c11.2-45.1-33.8-112.6-107.1-157.7l-22.5-11.3c-405.6-236.5-614.1-354.8-721.1-411.1 33.8 39.4 73.2 90.1 112.7 157.7l264.8 461.8c16.9 28.2 16.9 50.7 11.2 73.2h163.4c174.6 0 281.7-39.4 298.6-112.6z"
+      />
+    </g>
+    <!-- Placeholder query text -->
+    <text x="80" y="40" font-family="Inter, sans-serif" font-size="20" fill="#4b5b75" font-weight="300">
+      Search policies, people, projects, docs…
+    </text>
+    <!-- Cursor -->
+    <rect x="445" y="22" width="2" height="22" fill="#f58025">
+      <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite" />
+    </rect>
+    <!-- Magnifier on right -->
+    <g transform="translate(680,30) scale(0.8)">
+      <circle cx="0" cy="0" r="14" fill="none" stroke="#f58025" stroke-width="3.5" />
+      <line x1="10" y1="10" x2="20" y2="20" stroke="#f58025" stroke-width="3.5" stroke-linecap="round" />
+    </g>
+  </g>
+
+  <!-- Decorative magnifier / lens on right side -->
+  <g transform="translate(900,300)" opacity="0.9">
+    <circle cx="0" cy="0" r="160" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.15" />
+    <circle cx="0" cy="0" r="120" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.2" />
+    <circle cx="0" cy="0" r="80" fill="none" stroke="#f58025" stroke-width="3" opacity="0.7" />
+    <!-- Detected result dots -->
+    <circle cx="-110" cy="-60" r="4" fill="#f58025" />
+    <circle cx="130" cy="40" r="4" fill="#f58025" />
+    <circle cx="-40" cy="120" r="4" fill="#ffffff" opacity="0.5" />
+    <circle cx="90" cy="-130" r="4" fill="#ffffff" opacity="0.5" />
+  </g>
+</svg>

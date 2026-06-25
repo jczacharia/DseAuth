@@ -1,3 +1,7 @@
 <Solution>
+  <Project Path="Dse.UI/Dse.UI.esproj">
+    <BuildType Project="Debug" />
+    <Build />
+  </Project>
   <Project Path="Dse.Api/Dse.Api.csproj" />
 </Solution>

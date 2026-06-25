@@ -1,15 +1,17 @@
 {
-  "name": "client",
-  "version": "0.0.0",
+  "name": "dse",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "fix": "eslint --fix . && prettier --ignore-path .gitignore --write ."
   },
-  "private": true,
-  "packageManager": "pnpm@11.9.0",
- "dependencies": {
+  "dependencies": {
     "@angular/aria": "catalog:angular",
     "@angular/cdk": "catalog:angular",
     "@angular/common": "catalog:angular",

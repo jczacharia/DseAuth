@@ -1,16 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
-  selector: 'dse-root',
+  selector: 'app-root',
   imports: [RouterOutlet],
-  template: `
-    <h1>Hello, {{ title() }}</h1>
-
-    <router-outlet />
-  `,
-  styles: [],
+  host: {class: 'isolate'},
+  template: `<router-outlet />`,
 })
-export class App {
-  protected readonly title = signal('Client');
-}
+export class App {}

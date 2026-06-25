@@ -1,11 +1,33 @@
 {
-  "printWidth": 100,
+  "printWidth": 120,
+  "tabWidth": 2,
+  "useTabs": false,
   "singleQuote": true,
+  "semi": true,
+  "quoteProps": "preserve",
+  "bracketSpacing": false,
+  "trailingComma": "all",
+  "endOfLine": "lf",
+  "plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["clsx", "cva", "cx", "cn", "classes"],
+  "tailwindAttributes": ["cn", "class", "className", "classes"],
   "overrides": [
     {
       "files": "*.html",
       "options": {
         "parser": "angular"
+      }
+    },
+    {
+      "files": "*.svg",
+      "options": {
+        "parser": "html"
+      }
+    },
+    {
+      "files": "*.csproj",
+      "options": {
+        "parser": "html"
       }
     }
   ]

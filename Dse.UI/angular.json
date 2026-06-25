@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "Client": {
+    "dse": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -88,13 +88,38 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "Client:build:production"
+              "buildTarget": "dse:build:production"
             },
             "development": {
-              "buildTarget": "Client:build:development"
+              "buildTarget": "dse:build:development"
             }
           },
           "defaultConfiguration": "development"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "include": ["src/**/*.spec.ts"],
+            "tsConfig": "tsconfig.spec.json",
+            "buildTarget": "dse:build:development",
+            "providersFile": "src/testing/test-providers.ts",
+            "setupFiles": ["src/testing/test-setup.ts"],
+            "reporters": ["default", ["vitest-sonar-reporter", {"outputFile": "coverage/ut_report.xml"}]],
+            "coverageReporters": ["text", "html", "lcovonly", ["cobertura", {"file": "test-results.xml"}]],
+            "coverageThresholds": {
+              "branches": 80,
+              "functions": 80,
+              "lines": 80,
+              "statements": 80
+            },
+            "coverageExclude": ["src/app/api", "src/app/ui"]
+          }
         }
       }
     }

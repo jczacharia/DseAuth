@@ -1,3 +1,125 @@
-/* You can add global styles to this file, and also import other style files */
+@layer theme, base, components, utilities;
 
-@import 'tailwindcss';
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+
+@import '@spartan-ng/brain/hlm-tailwind-preset.css';
+
+@import '@fontsource-variable/noto-sans' layer(base);
+@import '@fontsource-variable/space-grotesk' layer(base);
+@import '@fontsource-variable/cascadia-code' layer(base);
+
+@custom-variant fixed (&:is(.layout-fixed *));
+
+@custom-variant dark (&:is(.dark *));
+.dark {
+  color-scheme: dark;
+}
+@custom-variant light (&:is(.light *));
+.light {
+  color-scheme: light;
+}
+
+@theme inline {
+  --font-sans:
+    'Noto Sans Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-heading: 'Space Grotesk Variable', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-mono:
+    'Cascadia Code Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+  --breakpoint-3xl: 1600px;
+  --breakpoint-4xl: 2000px;
+}
+
+/* Palette derived from the original brand primary (oklch hue 245) over blue-tinted neutrals (hue 250). */
+:root {
+  color-scheme: light;
+  --radius: 0.625rem;
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.21 0.015 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.015 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.015 250);
+
+  --primary: oklch(0.5 0.13 245);
+  --primary-foreground: oklch(0.99 0.01 245);
+  --secondary: oklch(0.96 0.008 250);
+  --secondary-foreground: oklch(0.21 0.015 250);
+  --muted: oklch(0.96 0.008 250);
+  --muted-foreground: oklch(0.46 0.02 250);
+  --accent: oklch(0.94 0.02 245);
+  --accent-foreground: oklch(0.3 0.05 245);
+  --destructive: oklch(0.52 0.18 25);
+
+  --border: oklch(0.87 0.01 250);
+  --input: oklch(0.87 0.01 250);
+  --ring: oklch(0.55 0.12 245);
+
+  --sidebar: oklch(0.975 0.005 250);
+  --sidebar-foreground: oklch(0.21 0.015 250);
+  --sidebar-primary: oklch(0.5 0.13 245);
+  --sidebar-primary-foreground: oklch(0.99 0.01 245);
+  --sidebar-accent: oklch(0.94 0.02 245);
+  --sidebar-accent-foreground: oklch(0.3 0.05 245);
+  --sidebar-border: oklch(0.87 0.01 250);
+  --sidebar-ring: oklch(0.55 0.12 245);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: oklch(0.16 0.01 250);
+  --foreground: oklch(0.96 0.008 250);
+  --card: oklch(0.21 0.012 250);
+  --card-foreground: oklch(0.96 0.008 250);
+  --popover: oklch(0.21 0.012 250);
+  --popover-foreground: oklch(0.96 0.008 250);
+
+  --primary: oklch(0.78 0.12 245);
+  --primary-foreground: oklch(0.16 0.05 245);
+  --secondary: oklch(0.26 0.012 250);
+  --secondary-foreground: oklch(0.96 0.008 250);
+  --muted: oklch(0.26 0.012 250);
+  --muted-foreground: oklch(0.71 0.012 250);
+  --accent: oklch(0.3 0.03 245);
+  --accent-foreground: oklch(0.92 0.03 245);
+  --destructive: oklch(0.78 0.16 25);
+
+  --border: oklch(0.31 0.012 250);
+  --input: oklch(0.34 0.012 250);
+  --ring: oklch(0.7 0.11 245);
+
+  --sidebar: oklch(0.21 0.012 250);
+  --sidebar-foreground: oklch(0.96 0.008 250);
+  --sidebar-primary: oklch(0.78 0.12 245);
+  --sidebar-primary-foreground: oklch(0.16 0.05 245);
+  --sidebar-accent: oklch(0.3 0.03 245);
+  --sidebar-accent-foreground: oklch(0.92 0.03 245);
+  --sidebar-border: oklch(0.31 0.012 250);
+  --sidebar-ring: oklch(0.7 0.11 245);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility container-wrapper {
+  @apply 3xl:fixed:max-w-[calc(var(--breakpoint-2xl)+2rem)] mx-auto w-full px-2;
+}
+
+@utility container {
+  @apply 3xl:max-w-screen-2xl mx-auto max-w-350 px-4 lg:px-8;
+}

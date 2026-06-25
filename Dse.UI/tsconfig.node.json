@@ -1,0 +1,16 @@
+{
+  // Type-checks the repo's root tooling config files (which live outside the app's rootDir, so the
+  // app tsconfigs don't include them). Gives the editor Node's types — e.g. `import.meta.dirname`.
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "target": "esnext",
+    "lib": ["esnext"],
+    "types": ["node", "vitest/globals"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["*.ts"]
+}

@@ -1,0 +1,22 @@
+{
+  "css.lint.unknownAtRules": "ignore",
+  "editor.codeActionsOnSave": {"source.fixAll.eslint": "explicit"},
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.rulers": [120],
+  "files.eol": "\n",
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass", "class:list"],
+  "tailwindCSS.classFunctions": ["clsx", "cva", "cx", "cn"],
+  "tailwindCSS.experimental.classRegex": [
+    ["\\.class\\s*\\(\\s*\\(\\s*\\)\\s*=>\\s*\\[([\\s\\S]*?)\\]\\s*\\)", "['\"`]([^'\"`]*)['\"`]"],
+    ["host:\\s*\\{([^}]*)\\}", "['\"`]([^'\"`]*)['\"`]"],
+    "(?:class|className)\\s*[=:]\\s*['\"`]([^'\"`]*)['\"`]",
+    "(?:cva|cn|cx|clsx)\\s*\\([^)]*['\"`]([^'\"`]*)['\"`]"
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-localhost-9000",
+    "projectKey": "dse"
+  }
+}
