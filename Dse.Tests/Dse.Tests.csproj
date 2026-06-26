@@ -4,12 +4,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="Xunit"/>
-    <Using Include="AwesomeAssertions"/>
+    <Using Include="Xunit" />
+    <Using Include="AwesomeAssertions" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AwesomeAssertions" Version="9.4.0"/>
+    <PackageReference Include="AwesomeAssertions" Version="9.4.0" />
     <PackageReference Include="coverlet.collector" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,27 +18,27 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MartinCostello.Logging.XUnit.v3" Version="0.7.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.9"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0"/>
-    <PackageReference Include="Microsoft.Playwright.Xunit.v3" Version="1.60.0"/>
+    <PackageReference Include="MartinCostello.Logging.XUnit.v3" Version="0.7.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.9" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
+    <PackageReference Include="Microsoft.Playwright.Xunit.v3" Version="1.60.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="xunit.v3.mtp-off" Version="4.0.0-pre.128"/>
+    <PackageReference Include="xunit.v3.mtp-off" Version="4.0.0-pre.128" />
   </ItemGroup>
 
   <Target Name="BuildSpa" BeforeTargets="Build" Condition="!Exists('../Dse.Api/wwwroot/index.html')">
-    <Exec WorkingDirectory="$(SpaRoot)" Command="$(NodePrefix) pnpm run build"/>
+    <Exec WorkingDirectory="$(SpaRoot)" Command="$(NodePrefix) npm run build" />
   </Target>
 
   <Target Name="RunSpaTests" AfterTargets="VSTest" Condition="'$(RunSpaTests)' != 'skip'">
     <Message Importance="high" Text="Running Angular (Vitest) tests..." />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="$(NodePrefix) pnpm run test:ci" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="$(NodePrefix) npm run test:ci" />
   </Target>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dse.Api\Dse.Api.csproj"/>
+    <ProjectReference Include="..\Dse.Api\Dse.Api.csproj" />
   </ItemGroup>
 </Project>

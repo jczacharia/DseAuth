@@ -1,2 +1,2 @@
 dotnet tool restore
-npx --yes -p node@26 -p pnpm@11 pnpm exec lint-staged
+npx lint-staged

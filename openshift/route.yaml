@@ -16,7 +16,7 @@ metadata:
   namespace: <namespace>
   annotations:
     haproxy.router.openshift.io/balance: roundrobin
-    haproxy.router.openshift.io/disable_cookies: "false" # router inserts an affinity cookie (sticky session)
+    haproxy.router.openshift.io/disable_cookies: 'false' # router inserts an affinity cookie (sticky session)
 spec:
   host: dse-rnd.pncint.net # friendly public name -> Ping Gateway forwards here post-auth
   to:
@@ -35,7 +35,7 @@ metadata:
   namespace: <namespace>
   annotations:
     haproxy.router.openshift.io/balance: roundrobin
-    haproxy.router.openshift.io/disable_cookies: "false"
+    haproxy.router.openshift.io/disable_cookies: 'false'
 spec:
   host: dse-ocp-rnd.pncint.net # direct OCP host (F5 VIP -> infra nodes) for non-Ping verification
   to:

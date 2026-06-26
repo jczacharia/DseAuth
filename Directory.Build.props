@@ -15,7 +15,7 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <SpaRoot>../Dse.UI</SpaRoot>
-    <NodePrefix>npx --yes -p node@26 -p pnpm@11</NodePrefix>
+    <NodePrefix>npx --yes -p node@26.3.0 -p pnpm@11.9.0</NodePrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' != 'true'">
@@ -24,7 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' != 'true'">
-    <InternalsVisibleTo Include="Dse.Tests"/>
+    <InternalsVisibleTo Include="Dse.Tests" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
@@ -36,8 +36,8 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
-    <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" Link="xunit.runner.json">
+    <content Include="$(MSBuildThisFileDirectory)xunit.runner.json" Link="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </content>
   </ItemGroup>
 </Project>

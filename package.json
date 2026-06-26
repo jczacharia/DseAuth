@@ -11,13 +11,15 @@
     "spell": "cspell --quiet --no-must-find-files \"**/*.{ts,js,html,md,cs}\"",
     "lint": "pnpm --filter dse run lint",
     "lint:fix": "pnpm --filter dse run lint:fix",
+    "fix": "dotnet tool restore && dotnet csharpier format . && prettier --write . && pnpm --filter dse run lint:fix",
     "csharpier": "dotnet csharpier format .",
     "csharpier:check": "dotnet csharpier check ."
   },
   "devDependencies": {
     "cspell": "^10.0.1",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.8",
+    "lint-staged": "^16.4.0",
+    "pnpm": "^11.9.0",
     "prettier": "^3.8.4",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.8.0",
