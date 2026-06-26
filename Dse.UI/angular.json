@@ -44,7 +44,6 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
@@ -59,6 +58,7 @@
           },
           "configurations": {
             "production": {
+              "tsConfig": "tsconfig.app.json",
               "budgets": [
                 {
                   "type": "initial",
@@ -74,9 +74,28 @@
               "outputHashing": "all"
             },
             "development": {
+              "tsConfig": "tsconfig.dev.json",
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": {
+                "hidden": false,
+                "scripts": true,
+                "sourcesContent": true,
+                "styles": true,
+                "vendor": true
+              }
+            },
+            "test": {
+              "tsConfig": "tsconfig.spec.json",
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": {
+                "hidden": false,
+                "scripts": true,
+                "sourcesContent": true,
+                "styles": true,
+                "vendor": true
+              }
             }
           },
           "defaultConfiguration": "production"
@@ -103,23 +122,7 @@
           }
         },
         "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "include": ["src/**/*.spec.ts"],
-            "tsConfig": "tsconfig.spec.json",
-            "buildTarget": "dse:build:development",
-            "providersFile": "src/testing/test-providers.ts",
-            "setupFiles": ["src/testing/test-setup.ts"],
-            "reporters": ["default", ["vitest-sonar-reporter", {"outputFile": "coverage/ut_report.xml"}]],
-            "coverageReporters": ["text", "html", "lcovonly", ["cobertura", {"file": "test-results.xml"}]],
-            "coverageThresholds": {
-              "branches": 80,
-              "functions": 80,
-              "lines": 80,
-              "statements": 80
-            },
-            "coverageExclude": ["src/app/api", "src/app/ui"]
-          }
+          "builder": "@analogjs/vitest-angular:test"
         }
       }
     }

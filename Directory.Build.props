@@ -14,5 +14,30 @@
     <NuGetAuditMode>all</NuGetAuditMode>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <SpaRoot>../Dse.UI</SpaRoot>
+    <NodePrefix>npx --yes -p node@26 -p pnpm@11</NodePrefix>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' != 'true'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
+    <InternalsVisibleTo Include="Dse.Tests"/>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <ExcludeByFile>**/*.g.cs</ExcludeByFile>
+    <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json" Link="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

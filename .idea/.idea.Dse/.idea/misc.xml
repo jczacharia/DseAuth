@@ -3,4 +3,8 @@
   <component name="TypeScriptCompiler">
     <option name="memoryAutoIncrease" value="true" />
   </component>
+  <component name="ViteConfiguration">
+    <option name="mode" value="MANUAL" />
+    <option name="path" value="$PROJECT_DIR$/Dse.UI/vite.config.mts" />
+  </component>
 </project>

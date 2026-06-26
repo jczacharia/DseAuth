@@ -21,9 +21,10 @@ ENV PATH=/app:${PATH} HOME=/app
 
 # The Apache image's three .conf files (rewrite / pingheader / rproxy) are translated to code in
 # Program.cs + Gateway/, so no httpd config is copied. The SPA + robots.txt the Apache image put under
-# /var/www/html are produced into wwwroot by `dotnet publish -c Release` (the Dse.UI .esproj reference
-# runs `pnpm build`), so they ride in via the published `app` output below. The publish agent therefore
-# needs node + pnpm; pass -p:SkipSpaBuild=true if the SPA is built in a separate pipeline step instead.
+# /var/www/html are produced into wwwroot by `dotnet publish -c Release` (Dse.Api's BuildSpa target runs
+# `pnpm build`), so they ride in via the published `app` output below. The publish agent therefore needs
+# Node (the target shells through `npx` to pin node + pnpm); pass -p:SkipSpaBuild=true if the SPA is built
+# in a separate pipeline step instead.
 COPY uid_entrypoint .
 COPY app .
 

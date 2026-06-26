@@ -1,4 +1,3 @@
-/* Angular unit tests (Vitest via @angular/build:unit-test). */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
