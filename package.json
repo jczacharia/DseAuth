@@ -11,7 +11,7 @@
     "spell": "cspell --quiet --no-must-find-files \"**/*.{ts,js,html,md,cs}\"",
     "lint": "pnpm --filter dse run lint",
     "lint:fix": "pnpm --filter dse run lint:fix",
-    "fix": "dotnet tool restore && dotnet csharpier format . && prettier --write . && pnpm --filter dse run lint:fix",
+    "fix": "dotnet tool restore && dotnet csharpier format . && pnpm --filter dse run lint:fix && prettier --write .",
     "csharpier": "dotnet csharpier format .",
     "csharpier:check": "dotnet csharpier check ."
   },

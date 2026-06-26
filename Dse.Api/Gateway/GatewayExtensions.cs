@@ -1,3 +1,5 @@
+// Copyright (c) PNC Financial Services. All rights reserved.
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Diagnostics.HealthChecks;

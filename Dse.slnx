@@ -1,8 +1,11 @@
 <Solution>
+  <Project Path="Dse.Confluence/Dse.Confluence.csproj" />
+  <Project Path="Dse.Jira/Dse.Jira.csproj" />
   <Project Path="Dse.Tests/Dse.Tests.csproj" />
   <Project Path="Dse.UI/Dse.UI.esproj">
     <BuildType Project="Debug" />
     <Build />
   </Project>
   <Project Path="Dse.Api/Dse.Api.csproj" />
+  <Project Path="Dse\Dse.csproj" />
 </Solution>

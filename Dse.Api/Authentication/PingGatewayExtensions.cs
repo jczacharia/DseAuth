@@ -1,42 +1,18 @@
+// Copyright (c) PNC Financial Services. All rights reserved.
+
 using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Dse.Api.Authentication;
 
 public static class PingGatewayExtensions
 {
-    extension(IServiceCollection services)
-    {
-        public IServiceCollection AddPingGateway(IConfiguration configuration)
-        {
-            // Validate configuration at startup (fail fast) per the options pattern.
-            services
-                .AddOptions<PingGatewayOptions>()
-                .BindConfiguration(PingGatewayDefaults.ConfigSection)
-                .ValidateDataAnnotations()
-                .Validate(
-                    o => !string.IsNullOrWhiteSpace(o.JwksUri) || !string.IsNullOrWhiteSpace(o.Authority),
-                    "PingGateway: either JwksUri or Authority must be set to resolve signing keys."
-                )
-                .ValidateOnStart();
-
-            // The JwtBearer handler is configured at startup, so read the bound values directly here.
-            var options =
-                configuration.GetSection(PingGatewayDefaults.ConfigSection).Get<PingGatewayOptions>() ?? new PingGatewayOptions();
-
-            services
-                .AddAuthentication(PingGatewayDefaults.AuthenticationScheme)
-                .AddJwtBearer(PingGatewayDefaults.AuthenticationScheme, jwt => Configure(jwt, options));
-
-            return services;
-        }
-    }
-
     private static void Configure(JwtBearerOptions jwt, PingGatewayOptions options)
     {
-        var handler = BackchannelHandler(options.ProxyAddress);
+        HttpClientHandler? handler = BackchannelHandler(options.ProxyAddress);
         if (handler is not null)
         {
             jwt.BackchannelHttpHandler = handler;
@@ -46,7 +22,7 @@ public static class PingGatewayExtensions
 
         if (!string.IsNullOrWhiteSpace(options.JwksUri))
         {
-            var http = handler is null ? new HttpClient() : new HttpClient(handler);
+            HttpClient http = handler is null ? new() : new HttpClient(handler);
             jwt.ConfigurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                 options.JwksUri,
                 new JwksConfigurationRetriever(),
@@ -58,7 +34,7 @@ public static class PingGatewayExtensions
             jwt.Authority = options.Authority;
         }
 
-        var validation = jwt.TokenValidationParameters;
+        TokenValidationParameters validation = jwt.TokenValidationParameters;
         validation.ValidateIssuer = !string.IsNullOrWhiteSpace(options.Issuer);
         if (validation.ValidateIssuer)
         {
@@ -81,16 +57,12 @@ public static class PingGatewayExtensions
             // The gateway delivers the JWT in the PA.* cookie; fall back to a header if one is configured.
             OnMessageReceived = context =>
             {
-                if (context.Request.Cookies.TryGetValue(options.CookieName, out var cookie) && !string.IsNullOrEmpty(cookie))
+                if (context.Request.Cookies.TryGetValue(options.CookieName, out string? cookie) && !string.IsNullOrEmpty(cookie))
                 {
                     context.Token = cookie;
                 }
-                else if (
-                    !string.IsNullOrWhiteSpace(options.HeaderName)
-                    && context.Request.Headers.TryGetValue(options.HeaderName, out var value)
-                )
+                else if (context.HttpContext.Request.Headers.Authorization.FirstOrDefault() is { } raw)
                 {
-                    var raw = value.ToString();
                     context.Token = raw.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
                         ? raw["Bearer ".Length..].Trim()
                         : raw;
@@ -109,8 +81,31 @@ public static class PingGatewayExtensions
         };
     }
 
-    private static HttpClientHandler? BackchannelHandler(string? proxy)
+    private static HttpClientHandler? BackchannelHandler(string? proxy) =>
+        string.IsNullOrWhiteSpace(proxy) ? null : new HttpClientHandler { Proxy = new WebProxy(proxy), UseProxy = true };
+
+    extension(IServiceCollection services)
     {
-        return string.IsNullOrWhiteSpace(proxy) ? null : new HttpClientHandler { Proxy = new WebProxy(proxy), UseProxy = true };
+        public void AddPingGateway(IConfiguration configuration)
+        {
+            // Validate configuration at startup (fail fast) per the options pattern.
+            services
+                .AddOptions<PingGatewayOptions>()
+                .BindConfiguration(PingGatewayDefaults.ConfigSection)
+                .ValidateDataAnnotations()
+                .Validate(
+                    o => !string.IsNullOrWhiteSpace(o.JwksUri) || !string.IsNullOrWhiteSpace(o.Authority),
+                    "PingGateway: either JwksUri or Authority must be set to resolve signing keys."
+                )
+                .ValidateOnStart();
+
+            // The JwtBearer handler is configured at startup, so read the bound values directly here.
+            PingGatewayOptions options =
+                configuration.GetSection(PingGatewayDefaults.ConfigSection).Get<PingGatewayOptions>() ?? new PingGatewayOptions();
+
+            services
+                .AddAuthentication(PingGatewayDefaults.AuthenticationScheme)
+                .AddJwtBearer(PingGatewayDefaults.AuthenticationScheme, jwt => Configure(jwt, options));
+        }
     }
 }

@@ -1,15 +1,27 @@
+// Copyright (c) PNC Financial Services. All rights reserved.
+
 using System.Security.Claims;
+using Dse;
 using Dse.Api.Authentication;
 using Dse.Api.Gateway;
+using Dse.Core;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddProblemDetails();
 builder.Services.AddGatewayIntegration();
 builder.Services.AddPingGateway(builder.Configuration);
 builder.Services.AddOpenApi();
 
-var app = builder.Build();
+if (DseEnvironment.IsDocumentGenerationBuild)
+{
+    // Don't validate when generating OpenAPI documents; else with throw
+    builder.Services.RemoveAll<IStartupValidator>();
+}
+
+WebApplication app = builder.Build();
 
 app.UseGatewayIntegration();
 
@@ -35,13 +47,18 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // API surface, validated against the gateway-issued Ping JWT (inherits the require-auth fallback policy).
-var api = app.MapGroup("/api").RequireAuthorization();
+RouteGroupBuilder api = app.MapGroup("/api").RequireAuthorization();
 
 api.MapGet(
     "/me",
     (ClaimsPrincipal user) =>
         TypedResults.Json(new { name = user.Identity?.Name, claims = user.Claims.Select(c => new { c.Type, c.Value }) })
 );
+
+foreach (var reg in app.Services.GetServices<WebAppExtender>())
+{
+    reg.Register(app);
+}
 
 // Unknown API routes must 404, never the SPA shell — mirrors the rewrite.conf "!^/api/v1" exclusion.
 api.MapFallback(TypedResults.NotFound);

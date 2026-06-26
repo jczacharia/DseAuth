@@ -14,16 +14,16 @@ import {debounceTime, distinctUntilChanged} from 'rxjs';
   template: `
     <div class="relative">
       <ng-icon
-        name="lucideSearch"
         class="text-muted-foreground pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-base"
+        name="lucideSearch"
       />
       <input
-        hlmInput
-        type="search"
-        class="h-9 w-full pl-9"
-        placeholder="Search everything…"
         autocomplete="off"
+        class="h-9 w-full pl-9"
+        hlmInput
+        placeholder="Search everything…"
         spellcheck="false"
+        type="search"
         [value]="text()"
         (input)="onInput($event)"
         (keydown.escape)="text.set('')"

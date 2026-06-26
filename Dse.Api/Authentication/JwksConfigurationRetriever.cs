@@ -1,3 +1,5 @@
+// Copyright (c) PNC Financial Services. All rights reserved.
+
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -14,9 +16,9 @@ internal sealed class JwksConfigurationRetriever : IConfigurationRetriever<OpenI
         CancellationToken cancel
     )
     {
-        var json = await retriever.GetDocumentAsync(address, cancel);
+        string? json = await retriever.GetDocumentAsync(address, cancel);
         var config = new OpenIdConnectConfiguration { JwksUri = address, JsonWebKeySet = JsonWebKeySet.Create(json) };
-        foreach (var key in config.JsonWebKeySet.GetSigningKeys())
+        foreach (SecurityKey? key in config.JsonWebKeySet.GetSigningKeys())
         {
             config.SigningKeys.Add(key);
         }

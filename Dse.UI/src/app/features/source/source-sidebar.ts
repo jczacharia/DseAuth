@@ -11,12 +11,12 @@ import {HlmSidebarImports} from '@spartan-ng/helm/sidebar';
   imports: [HlmSidebarImports, HlmButton, NgIcon, RouterLink],
   providers: [provideIcons({lucideChevronLeft})],
   template: `
-    <div hlmSidebarHeader class="h-12 flex-row items-center gap-1 px-2">
+    <div class="h-12 flex-row items-center gap-1 px-2" hlmSidebarHeader>
       <button
-        hlmBtn
-        variant="ghost"
-        size="icon-sm"
         aria-label="Back to sources"
+        hlmBtn
+        size="icon-sm"
+        variant="ghost"
         [routerLink]="[{outlets: {sidebar: ['home']}}]"
       >
         <ng-icon name="lucideChevronLeft" />
@@ -26,7 +26,7 @@ import {HlmSidebarImports} from '@spartan-ng/helm/sidebar';
     <div hlmSidebarContent>
       <div hlmSidebarGroup>
         <div hlmSidebarGroupLabel>Filters</div>
-        <div hlmSidebarGroupContent class="text-muted-foreground px-2 text-sm">Coming soon.</div>
+        <div class="text-muted-foreground px-2 text-sm" hlmSidebarGroupContent>Coming soon.</div>
       </div>
     </div>
   `,

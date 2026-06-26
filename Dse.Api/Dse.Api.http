@@ -1,6 +1,0 @@
-@Dse.Api_HostAddress = http://localhost:5076
-
-GET {{Dse.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
