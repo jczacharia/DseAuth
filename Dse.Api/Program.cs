@@ -55,7 +55,7 @@ api.MapGet(
         TypedResults.Json(new { name = user.Identity?.Name, claims = user.Claims.Select(c => new { c.Type, c.Value }) })
 );
 
-foreach (var reg in app.Services.GetServices<WebAppExtender>())
+foreach (WebAppExtender reg in app.Services.GetServices<WebAppExtender>())
 {
     reg.Register(app);
 }

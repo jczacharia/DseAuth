@@ -11,5 +11,4 @@ export default {
   'Dse.UI/**/*.{ts,js,html}': ['pnpm --filter dse exec eslint --fix'],
   '*.cs': (files) => `dotnet csharpier format ${files.map((file) => relative(process.cwd(), file)).join(' ')}`,
   '*.{ts,js,html,json,css,scss,md,svg,csproj,esproj}': ['prettier --write'],
-  // '*.{ts,js,html,md,cs}': ['cspell --quiet --no-must-find-files'],
 };

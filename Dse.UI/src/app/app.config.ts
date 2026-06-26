@@ -7,7 +7,7 @@ import {Theme} from '#core/theme/theme';
 import Confluence from '#sources/confluence/confluence';
 import Jira from '#sources/jira/jira';
 import Pnc from '#sources/pnc/pnc';
-import {HttpClient, provideHttpClient} from '@angular/common/http';
+import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/http';
 import {
   ErrorHandler,
   inject,
@@ -28,6 +28,7 @@ import {
 import {provideNgIconLoader} from '@ng-icons/core';
 import {AppErrorHandler} from './app-error-handler';
 import {AppReuseStrategy} from './app-reuse-strategy';
+import {reAuthInterceptor} from './re-auth.interceptor';
 
 const sources: Type<Source>[] = [Pnc, Confluence, Jira];
 
@@ -35,7 +36,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     {provide: ErrorHandler, useExisting: AppErrorHandler},
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([reAuthInterceptor])),
     provideHeyApiClient(client),
     provideEnvironmentInitializer(() => inject(Theme)),
     {provide: RouteReuseStrategy, useClass: AppReuseStrategy},

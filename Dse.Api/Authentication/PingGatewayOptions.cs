@@ -17,9 +17,11 @@ public sealed class PingGatewayOptions
 
     public string? Audience { get; set; }
 
-    public string? NameClaimType { get; set; } = "sub";
+    public string? NameClaimType { get; set; } = "uid";
 
     public bool RequireHttpsMetadata { get; set; } = true;
 
     public string? ProxyAddress { get; set; }
+
+    public string ReAuthHeader { get; set; } = "X-Re-Auth-Required";
 }

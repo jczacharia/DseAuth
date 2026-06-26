@@ -75,7 +75,7 @@ public static class PingGatewayExtensions
             // through the gateway (which silently refreshes against the still-valid SSO session). No HTML.
             OnChallenge = context =>
             {
-                context.Response.Headers["X-Reauth-Required"] = "true";
+                context.Response.Headers[options.ReAuthHeader] = "true";
                 return Task.CompletedTask;
             },
         };

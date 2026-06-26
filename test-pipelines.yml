@@ -1,0 +1,113 @@
+# #################################################
+# PR validation gate for merges into `main`.
+#
+# Purpose: prove that a PR won't break the build-time half of azure-pipelines.yml. It mirrors the
+# enterprise `build` job (restore -> build -> test -> publish) inside the SAME builder container and
+# with the SAME variables, so a green run here means the real pipeline's `build` job will:
+#   * compile the solution (TreatWarningsAsErrors=true makes the build itself a hard gate),
+#   * run the C# xUnit tests AND the Angular Vitest suite (Dse.Tests' RunSpaTests target shells out
+#     to `npm run test:ci` after VSTest),
+#   * build the Angular SPA into wwwroot (Dse.Api's Release-only BuildSpa target runs `pnpm build`),
+#   * produce the Ready-to-Run `app` artifact the Dockerfile consumes.
+#
+# Deliberately omitted: Sonar, Nexus IQ, golden-image/Sysdig scans, artifact upload, docker push,
+# QFaaS, GitOps deploy, and PIMS policy-as-code. Those need service connections + primary-branch
+# gating and cannot meaningfully run on a PR; they remain the job of azure-pipelines.yml on main.
+#
+# NOTE: Azure Repos Git ignores `pr:` triggers (they fire only on GitHub/Bitbucket). To actually
+# gate merges, add a Build Validation branch policy on `main` pointing at this pipeline
+# (Repos > Branches > main > Branch policies > Build Validation). The `pr:` block below documents
+# intent and works as-is if this repo is ever mirrored to GitHub.
+# #################################################
+
+trigger: none
+
+pr:
+  branches:
+    include:
+      - 'main'
+
+variables:
+  - template: environments/shared-values.yml@templates
+
+  # Keep these in lock-step with azure-pipelines.yml so the gate validates the real settings.
+  - name: dotnet_version
+    value: '10.0'
+  - name: restore_proj
+    value: 'Dse.slnx'
+  - name: build_proj
+    value: 'Dse.slnx'
+  - name: publish_proj
+    value: 'Dse.Api/Dse.Api.csproj'
+  - name: runtime_identifier
+    value: 'linux-x64'
+  - name: build_configuration
+    value: 'Release'
+  - name: test_configuration
+    value: 'Release'
+  - name: output_folder
+    value: '$(Build.ArtifactStagingDirectory)/app'
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      endpoint: enterprise_pnc_automation
+      name: PNC - ADO Enterprise Automation Pipeline/pnc-enterprise-templates
+      ref: refs/heads/master
+
+jobs:
+  - job: validate
+    displayName: 'Validate PR (restore / build / test / publish)'
+    pool:
+      name: $(agent_pool)
+    # dotnet_version is 10.0, so initialize's image-resolution logic always lands on the .NET 10
+    # builder; reference it directly to keep this gate self-contained. Container + env match the
+    # enterprise build job exactly.
+    container:
+      endpoint: 'enterprise_docker_stage_docker_pncint_net'
+      image: $(dotnet_10_0_builder_image)
+      options: -u root
+      env:
+        BROWSERSLIST_IGNORE_OLD_DATA: true
+        NODE_TLS_REJECT_UNAUTHORIZED: 0
+        DOTNET_ROLL_FORWARD: Major
+        HOME: /tmp
+    steps:
+      - checkout: self
+        fetchDepth: 1
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Restore (Ready to Run)'
+        inputs:
+          command: restore
+          projects: $(restore_proj)
+          configuration: $(build_configuration)
+          restoreArguments: '-r $(runtime_identifier) -p:PublishReadyToRun=true'
+          feedsToUse: config
+          nugetConfigPath: nuget.config
+          verbosityRestore: 'Detailed'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Build'
+        inputs:
+          command: build
+          projects: $(build_proj)
+          arguments: --configuration $(build_configuration) --no-restore
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Run Tests (C# xUnit + Angular Vitest)'
+        inputs:
+          command: test
+          projects: '**/*Tests.csproj'
+          arguments: --configuration $(test_configuration) --logger:Console;noprogress=true /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --no-build --no-restore
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Publish (Ready-to-Run)'
+        inputs:
+          command: publish
+          projects: $(publish_proj)
+          publishWebProjects: false
+          zipAfterPublish: false
+          modifyOutputPath: false
+          arguments: --configuration $(build_configuration) -r $(runtime_identifier) -p:PublishReadyToRun=true --output $(output_folder) --no-restore
