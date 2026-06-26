@@ -37,11 +37,11 @@ app.UseAuthorization();
 // API surface, validated against the gateway-issued Ping JWT (inherits the require-auth fallback policy).
 var api = app.MapGroup("/api").RequireAuthorization();
 
-api.MapGet("/me", (ClaimsPrincipal user) => TypedResults.Json(new
-{
-    name = user.Identity?.Name,
-    claims = user.Claims.Select(c => new { c.Type, c.Value }),
-}));
+api.MapGet(
+    "/me",
+    (ClaimsPrincipal user) =>
+        TypedResults.Json(new { name = user.Identity?.Name, claims = user.Claims.Select(c => new { c.Type, c.Value }) })
+);
 
 // Unknown API routes must 404, never the SPA shell — mirrors the rewrite.conf "!^/api/v1" exclusion.
 api.MapFallback(TypedResults.NotFound);

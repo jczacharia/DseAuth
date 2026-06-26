@@ -1,0 +1,27 @@
+{
+  "name": "dse-workspace",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "prepare": "husky",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "spell": "cspell --quiet --no-must-find-files \"**/*.{ts,js,html,md,cs}\"",
+    "lint": "pnpm --filter dse run lint",
+    "lint:fix": "pnpm --filter dse run lint:fix",
+    "csharpier": "dotnet csharpier format .",
+    "csharpier:check": "dotnet csharpier check ."
+  },
+  "devDependencies": {
+    "cspell": "^10.0.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
+    "prettier": "^3.8.4",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "tailwindcss": "^4.3.1",
+    "typescript": "~6.0.3"
+  }
+}

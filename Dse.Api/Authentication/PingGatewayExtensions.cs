@@ -12,18 +12,22 @@ public static class PingGatewayExtensions
         public IServiceCollection AddPingGateway(IConfiguration configuration)
         {
             // Validate configuration at startup (fail fast) per the options pattern.
-            services.AddOptions<PingGatewayOptions>()
+            services
+                .AddOptions<PingGatewayOptions>()
                 .BindConfiguration(PingGatewayDefaults.ConfigSection)
                 .ValidateDataAnnotations()
-                .Validate(o => !string.IsNullOrWhiteSpace(o.JwksUri) || !string.IsNullOrWhiteSpace(o.Authority),
-                    "PingGateway: either JwksUri or Authority must be set to resolve signing keys.")
+                .Validate(
+                    o => !string.IsNullOrWhiteSpace(o.JwksUri) || !string.IsNullOrWhiteSpace(o.Authority),
+                    "PingGateway: either JwksUri or Authority must be set to resolve signing keys."
+                )
                 .ValidateOnStart();
 
             // The JwtBearer handler is configured at startup, so read the bound values directly here.
-            var options = configuration.GetSection(PingGatewayDefaults.ConfigSection).Get<PingGatewayOptions>()
-                          ?? new PingGatewayOptions();
+            var options =
+                configuration.GetSection(PingGatewayDefaults.ConfigSection).Get<PingGatewayOptions>() ?? new PingGatewayOptions();
 
-            services.AddAuthentication(PingGatewayDefaults.AuthenticationScheme)
+            services
+                .AddAuthentication(PingGatewayDefaults.AuthenticationScheme)
                 .AddJwtBearer(PingGatewayDefaults.AuthenticationScheme, jwt => Configure(jwt, options));
 
             return services;
@@ -46,7 +50,8 @@ public static class PingGatewayExtensions
             jwt.ConfigurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                 options.JwksUri,
                 new JwksConfigurationRetriever(),
-                new HttpDocumentRetriever(http) { RequireHttps = options.RequireHttpsMetadata });
+                new HttpDocumentRetriever(http) { RequireHttps = options.RequireHttpsMetadata }
+            );
         }
         else if (!string.IsNullOrWhiteSpace(options.Authority))
         {
@@ -76,13 +81,14 @@ public static class PingGatewayExtensions
             // The gateway delivers the JWT in the PA.* cookie; fall back to a header if one is configured.
             OnMessageReceived = context =>
             {
-                if (context.Request.Cookies.TryGetValue(options.CookieName, out var cookie)
-                    && !string.IsNullOrEmpty(cookie))
+                if (context.Request.Cookies.TryGetValue(options.CookieName, out var cookie) && !string.IsNullOrEmpty(cookie))
                 {
                     context.Token = cookie;
                 }
-                else if (!string.IsNullOrWhiteSpace(options.HeaderName)
-                         && context.Request.Headers.TryGetValue(options.HeaderName, out var value))
+                else if (
+                    !string.IsNullOrWhiteSpace(options.HeaderName)
+                    && context.Request.Headers.TryGetValue(options.HeaderName, out var value)
+                )
                 {
                     var raw = value.ToString();
                     context.Token = raw.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
@@ -105,8 +111,6 @@ public static class PingGatewayExtensions
 
     private static HttpClientHandler? BackchannelHandler(string? proxy)
     {
-        return string.IsNullOrWhiteSpace(proxy)
-            ? null
-            : new HttpClientHandler { Proxy = new WebProxy(proxy), UseProxy = true };
+        return string.IsNullOrWhiteSpace(proxy) ? null : new HttpClientHandler { Proxy = new WebProxy(proxy), UseProxy = true };
     }
 }

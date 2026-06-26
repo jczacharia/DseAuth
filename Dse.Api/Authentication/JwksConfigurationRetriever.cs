@@ -11,7 +11,8 @@ internal sealed class JwksConfigurationRetriever : IConfigurationRetriever<OpenI
     public async Task<OpenIdConnectConfiguration> GetConfigurationAsync(
         string address,
         IDocumentRetriever retriever,
-        CancellationToken cancel)
+        CancellationToken cancel
+    )
     {
         var json = await retriever.GetDocumentAsync(address, cancel);
         var config = new OpenIdConnectConfiguration { JwksUri = address, JsonWebKeySet = JsonWebKeySet.Create(json) };

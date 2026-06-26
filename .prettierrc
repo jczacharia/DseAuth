@@ -25,7 +25,7 @@
       }
     },
     {
-      "files": "*.csproj",
+      "files": "*.{csproj,esproj,props,targets}",
       "options": {
         "parser": "html"
       }

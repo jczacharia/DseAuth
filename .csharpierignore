@@ -1,0 +1,12 @@
+# gitignore syntax. CSharpier only formats C#; keep it off generated and build output.
+**/obj/
+**/bin/
+
+# Prettier owns project/XML files (see .prettierrc). Keep CSharpier to .cs only.
+*.csproj
+*.esproj
+*.props
+*.targets
+*.slnx
+*.config
+*.xml
