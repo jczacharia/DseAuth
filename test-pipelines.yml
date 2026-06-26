@@ -8,16 +8,21 @@
 #   * run the C# xUnit tests AND the Angular Vitest suite (Dse.Tests' RunSpaTests target shells out
 #     to `npm run test:ci` after VSTest),
 #   * build the Angular SPA into wwwroot (Dse.Api's Release-only BuildSpa target runs `pnpm build`),
-#   * produce the Ready-to-Run `app` artifact the Dockerfile consumes.
+#   * produce the Ready-to-Run `app` artifact the Dockerfile consumes,
+#   * run SonarQube analysis as a PR (PR decoration) and publish the Quality Gate to the PR.
 #
-# Deliberately omitted: Sonar, Nexus IQ, golden-image/Sysdig scans, artifact upload, docker push,
-# QFaaS, GitOps deploy, and PIMS policy-as-code. Those need service connections + primary-branch
-# gating and cannot meaningfully run on a PR; they remain the job of azure-pipelines.yml on main.
+# Deliberately omitted: Nexus IQ, golden-image/Sysdig scans, artifact upload, docker push, QFaaS,
+# GitOps deploy, and PIMS policy-as-code. Those need service connections + primary-branch gating and
+# cannot meaningfully run on a PR; they remain the job of azure-pipelines.yml on main.
 #
-# NOTE: Azure Repos Git ignores `pr:` triggers (they fire only on GitHub/Bitbucket). To actually
-# gate merges, add a Build Validation branch policy on `main` pointing at this pipeline
-# (Repos > Branches > main > Branch policies > Build Validation). The `pr:` block below documents
-# intent and works as-is if this repo is ever mirrored to GitHub.
+# ENFORCEMENT (two policies on the `main` branch, both required for this to actually block a merge):
+#   1. Azure Repos Git ignores `pr:` triggers (GitHub/Bitbucket only). Add a Build Validation branch
+#      policy on `main` pointing at this pipeline: Repos > Branches > main > Branch policies > Build
+#      Validation. The `pr:` block below documents intent and works as-is if mirrored to GitHub.
+#   2. The Quality Gate is enforced via the SonarQube status check, not by failing this run. After
+#      the first PR analysis, add the Sonar status as a required Status Check in the same branch
+#      policy so a failing gate blocks the merge. (SonarQube Server must be Developer Edition+ with
+#      the Azure DevOps ALM integration configured for PR analysis/decoration to work.)
 # #################################################
 
 trigger: none
@@ -31,6 +36,14 @@ variables:
   - template: environments/shared-values.yml@templates
 
   # Keep these in lock-step with azure-pipelines.yml so the gate validates the real settings.
+  - name: version
+    value: '2.2.2'
+  - name: mnemonic
+    value: dse
+  - name: app_name
+    value: searchapi
+  - name: sonar_custom_exclusions
+    value: '*Tests*.cs,*testresult*.xml,*opencover*.xml,**/Program.cs,*Dockerfile*,**/quality_engineering/**,**/Dse.UI/src/app/api/**,**/Dse.UI/src/app/ui/**'
   - name: dotnet_version
     value: '10.0'
   - name: restore_proj
@@ -77,6 +90,17 @@ jobs:
       - checkout: self
         fetchDepth: 1
 
+      # The extension auto-detects the PR (System.PullRequest.* set by the main branch-policy build
+      # validation) and sets sonar.pullrequest.key/branch/base itself, so analysis runs AS a PR and
+      # decorates it. `begin` must run before the build it instruments. Mirrors azure-pipelines.yml.
+      - task: sonarsource.sonarqube.15B84CA1-B62F-4A2A-A403-89B77A063157.SonarQubePrepare@8
+        displayName: 'Prepare analysis on SonarQube'
+        inputs:
+          SonarQube: 'enterprise_sonar'
+          projectKey: $(sonar_project_key)
+          projectVersion: $(version)
+          extraProperties: "sonar.scanner.skipJreProvisioning=true\nsonar.exclusions=**/*.bin\nsonar.scm.disabled=true\nsonar.coverage.dtdVerification=true \nsonar.exclusions=$(sonar_custom_exclusions)\nsonar.coverage.exclusions=\"*Tests*.cs, *testresult*.xml, *opencover*.xml\"\nsonar.test.exclusions=\"*Tests*.cs, *testresult*.xml, *opencover*.xml\"\nsonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml\nsonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx\nsonar.analysis.artifact=gav://pnc/$(mnemonic)/$(app_name):$(version)\nsonar.analysis.commit=$(Build.SourceVersion)\n"
+
       - task: DotNetCoreCLI@2
         displayName: 'Restore (Ready to Run)'
         inputs:
@@ -111,3 +135,17 @@ jobs:
           zipAfterPublish: false
           modifyOutputPath: false
           arguments: --configuration $(build_configuration) -r $(runtime_identifier) -p:PublishReadyToRun=true --output $(output_folder) --no-restore
+
+      # `end` step: collects the opencover/trx reports produced above and uploads to SonarQube.
+      - task: sonarsource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@8
+        displayName: 'Run Code Analysis'
+        inputs:
+          jdkversion: 'JAVA_HOME_21_X64'
+
+      # Posts the Quality Gate result to the build summary AND to the PR (decoration). This task only
+      # reports; it never fails the build. Enforce the gate by marking the Sonar status check
+      # required in main's Build Validation branch policy (see header).
+      - task: sonarsource.sonarqube.291ed61f-1ee4-45d3-b1b0-bf822d9095ef.SonarQubePublish@8
+        displayName: 'Publish Quality Gate Result'
+        inputs:
+          pollingTimeoutSec: '300'

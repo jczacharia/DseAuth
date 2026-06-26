@@ -26,3 +26,4 @@ SpaProxy
 wwwroot
 Kestrel
 Roslyn
+Vogen

@@ -37,12 +37,17 @@ public static class GatewayExtensions
         }
     }
 
-    extension(IApplicationBuilder app)
+    extension(WebApplication app)
     {
         public void UseGatewayIntegration()
         {
             // must run before anything that reads scheme/host
             app.UseForwardedHeaders();
+
+            if (app.Environment.IsProduction())
+            {
+                app.UseHsts();
+            }
 
             // Authenticated requests must not be cached so that, after a Ping logout, the browser can't redisplay them from cache.
             app.Use(

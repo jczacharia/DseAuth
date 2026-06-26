@@ -2,18 +2,55 @@
 
 using System.Security.Claims;
 using Dse;
+using Dse.Api;
 using Dse.Api.Authentication;
 using Dse.Api.Gateway;
 using Dse.Core;
+using Dse.Extensions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddProblemDetails();
+if (builder.Environment.IsLocalBuild())
+{
+    builder.Configuration.AddUserSecrets("dse");
+}
+
 builder.Services.AddGatewayIntegration();
 builder.Services.AddPingGateway(builder.Configuration);
-builder.Services.AddOpenApi();
+
+builder.Services.AddProblemDetails(static s => s.ApplyCoreCustomization());
+builder.Services.AddScoped<ProblemDetailsFactory, DefaultProblemDetailsFactory>();
+builder.Services.ConfigureHttpClientDefaults(static o => o.RemoveAllLoggers());
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
+builder.RemoveWindowsEventLogProvider();
+
+builder.Host.UseDefaultServiceProvider(static options =>
+{
+    options.ValidateScopes = true;
+    options.ValidateOnBuild = true;
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApi(opts =>
+{
+    opts.OpenApiVersion = OpenApiSpecVersion.OpenApi3_1;
+    opts.MapVogenTypesInDse();
+    opts.AddComponentsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+    opts.AddDocumentTransformer(
+        static (doc, _, _) =>
+        {
+            doc.Info.Title = "DSE";
+            doc.Info.Description = "Enterprise Search";
+            return Task.CompletedTask;
+        }
+    );
+});
 
 if (DseEnvironment.IsDocumentGenerationBuild)
 {
@@ -28,16 +65,9 @@ app.UseGatewayIntegration();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi().AllowAnonymous();
-}
-
-// Probes hit the pod directly (not through the gateway, so no token) — must bypass the validator.
-// /api/live is self-only (no dependencies) so a flaky dependency never restarts the pod; /api/ready
-// runs the "ready"-tagged checks so traffic is steered away from an unready pod.
-app.MapHealthChecks("/api/live", new() { Predicate = c => c.Tags.Contains("live") }).AllowAnonymous();
-app.MapHealthChecks("/api/ready", new() { Predicate = c => c.Tags.Contains("ready") }).AllowAnonymous();
+RouteGroupBuilder api = app.MapGroup("/api").WithTags("Api");
+api.MapOpenApi();
+api.MapScalarApiReference();
 
 // SPA assets are public; the gateway already authenticated the user upstream (old Apache served these freely).
 app.UseDefaultFiles();
@@ -45,9 +75,6 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// API surface, validated against the gateway-issued Ping JWT (inherits the require-auth fallback policy).
-RouteGroupBuilder api = app.MapGroup("/api").RequireAuthorization();
 
 api.MapGet(
     "/me",
