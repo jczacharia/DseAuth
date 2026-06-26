@@ -101,10 +101,9 @@ jobs:
           projectVersion: $(version)
           extraProperties: |
             sonar.scanner.skipJreProvisioning=true
-            sonar.exclusions=**/*.bin
             sonar.scm.disabled=true
             sonar.coverage.dtdVerification=true
-            sonar.exclusions=$(sonar_custom_exclusions)
+            sonar.exclusions=**/obj/**,**/bin/**,**/*.bin,$(sonar_custom_exclusions)
             sonar.coverage.exclusions="*Tests*.cs, *testresult*.xml, *opencover*.xml"
             sonar.test.exclusions="*Tests*.cs, *testresult*.xml, *opencover*.xml"
             sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml
