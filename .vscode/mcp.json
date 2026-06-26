@@ -3,7 +3,8 @@
   "servers": {
     "angular-cli": {
       "command": "npx",
-      "args": ["-y", "@angular/cli", "mcp"]
+      "args": ["-y", "@angular/cli", "mcp"],
+      "cwd": "${workspaceFolder}/Dse.UI"
     }
   }
 }

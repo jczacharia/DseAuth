@@ -1,0 +1,58 @@
+{
+  // ─────────────────────────────────────────────────────────────────────────
+  // Formatting — Prettier, everywhere. Resolves from the ROOT node_modules
+  // (walks up from each file), so it formats Dse.UI files too.
+  // ─────────────────────────────────────────────────────────────────────────
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.prettierPath": "node_modules/prettier",
+  "editor.rulers": [120],
+  "files.eol": "\n",
+  "css.lint.unknownAtRules": "ignore",
+
+  // C# is formatted by CSharpier (the local dotnet tool), not Prettier.
+  "[csharp]": {
+    "editor.defaultFormatter": "csharpier.csharpier-vscode"
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // ESLint — scoped to the Dse.UI package only. workingDirectories sets the
+  // process cwd to Dse.UI, so the extension resolves eslint + eslint.config.ts
+  // from Dse.UI/node_modules and ignores everything outside the folder.
+  // ─────────────────────────────────────────────────────────────────────────
+  "eslint.workingDirectories": [{"directory": "Dse.UI", "changeProcessCWD": true}],
+  "eslint.validate": ["javascript", "typescript", "html"],
+  "editor.codeActionsOnSave": {"source.fixAll.eslint": "explicit"},
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Tailwind — scoped to the Dse.UI package only. Maps the v4 CSS entry to the
+  // Dse.UI/** glob, so IntelliSense activates only there and resolves
+  // tailwindcss from Dse.UI/node_modules.
+  // ─────────────────────────────────────────────────────────────────────────
+  "tailwindCSS.experimental.configFile": {
+    "Dse.UI/src/styles.css": "Dse.UI/**"
+  },
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass", "class:list"],
+  "tailwindCSS.classFunctions": ["clsx", "cva", "cx", "cn"],
+  "tailwindCSS.experimental.classRegex": [
+    ["\\.class\\s*\\(\\s*\\(\\s*\\)\\s*=>\\s*\\[([\\s\\S]*?)\\]\\s*\\)", "['\"`]([^'\"`]*)['\"`]"],
+    ["host:\\s*\\{([^}]*)\\}", "['\"`]([^'\"`]*)['\"`]"],
+    "(?:class|className)\\s*[=:]\\s*['\"`]([^'\"`]*)['\"`]",
+    "(?:cva|cn|cx|clsx)\\s*\\([^)]*['\"`]([^'\"`]*)['\"`]"
+  ],
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // TypeScript — use the workspace TS from the UI toolchain.
+  // (Corrected from the old non-standard "js/ts.*" keys, which VS Code ignores.)
+  // ─────────────────────────────────────────────────────────────────────────
+  "js/ts.tsdk.path": "Dse.UI/node_modules/typescript/lib",
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // SonarLint
+  // ─────────────────────────────────────────────────────────────────────────
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-localhost-9000",
+    "projectKey": "dse"
+  }
+}

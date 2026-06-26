@@ -3,8 +3,12 @@
   "version": "2.0.0",
   "tasks": [
     {
+      // Runs Dse.UI's `start` script (ng serve). `path` targets the workspace
+      // member; VS Code uses pnpm automatically from the packageManager field.
       "type": "npm",
       "script": "start",
+      "path": "Dse.UI/",
+      "label": "ng serve",
       "isBackground": true,
       "problemMatcher": {
         "owner": "typescript",
