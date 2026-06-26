@@ -93,7 +93,7 @@ jobs:
       # The extension auto-detects the PR (System.PullRequest.* set by the main branch-policy build
       # validation) and sets sonar.pullrequest.key/branch/base itself, so analysis runs AS a PR and
       # decorates it. `begin` must run before the build it instruments. Mirrors azure-pipelines.yml.
-      - task: sonarsource.sonarqube.15B84CA1-B62F-4A2A-A403-89B77A063157.SonarQubePrepare@8
+      - task: SonarQubePrepare@8
         displayName: 'Prepare analysis on SonarQube'
         inputs:
           SonarQube: 'enterprise_sonar'
@@ -137,7 +137,7 @@ jobs:
           arguments: --configuration $(build_configuration) -r $(runtime_identifier) -p:PublishReadyToRun=true --output $(output_folder) --no-restore
 
       # `end` step: collects the opencover/trx reports produced above and uploads to SonarQube.
-      - task: sonarsource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@8
+      - task: SonarQubeAnalyze@8
         displayName: 'Run Code Analysis'
         inputs:
           jdkversion: 'JAVA_HOME_21_X64'
@@ -145,7 +145,7 @@ jobs:
       # Posts the Quality Gate result to the build summary AND to the PR (decoration). This task only
       # reports; it never fails the build. Enforce the gate by marking the Sonar status check
       # required in main's Build Validation branch policy (see header).
-      - task: sonarsource.sonarqube.291ed61f-1ee4-45d3-b1b0-bf822d9095ef.SonarQubePublish@8
+      - task: SonarQubePublish@8
         displayName: 'Publish Quality Gate Result'
         inputs:
           pollingTimeoutSec: '300'
