@@ -6,6 +6,10 @@
 # dotenv files
 .env
 
+.mcp.json
+.sonarqube
+.sonar-tmp/
+
 # User-specific files
 *.rsuser
 *.suo

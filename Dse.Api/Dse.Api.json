@@ -1,13 +1,16 @@
 {
   "openapi": "3.1.1",
   "info": {
-    "title": "Dse.Api | v1",
+    "title": "DSE",
+    "description": "Enterprise Search",
     "version": "1.0.0"
   },
   "paths": {
     "/api/me": {
       "get": {
-        "tags": ["Dse.Api"],
+        "tags": [
+          "Api"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -18,7 +21,7 @@
   },
   "tags": [
     {
-      "name": "Dse.Api"
+      "name": "Api"
     }
   ]
 }

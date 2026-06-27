@@ -35,13 +35,15 @@ public class SonarHttpClient
 
     public async Task<object> Get(SonarGetRequest request)
     {
-        if (!_allowedEndpoints.Contains(request.Endpoint))
+        // Use the value stored in the allowlist, not the request copy, so the path is provably config-sourced.
+        if (!_allowedEndpoints.TryGetValue(request.Endpoint, out string? endpoint))
         {
             throw new UnauthorizedAccessException($"Unauthorized SonarQube API endpoint: {request.Endpoint}");
         }
 
-        string url = $"{request.Endpoint}?{request.Query}";
-        var message = new HttpRequestMessage(HttpMethod.Get, url);
+        string query = NormalizeQuery(request.Query);
+        string url = query.Length == 0 ? endpoint : $"{endpoint}?{query}";
+        var message = new HttpRequestMessage(HttpMethod.Get, new Uri(url, UriKind.Relative));
         using HttpResponseMessage response = await _httpClient.SendAsync(message);
 
         string str = await response.Content.ReadAsStringAsync();
@@ -78,5 +80,29 @@ public class SonarHttpClient
         }
 
         return json;
+    }
+
+    // Re-encode each query component so user-supplied data can't smuggle path/fragment characters into the URL.
+    private static string NormalizeQuery(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return string.Empty;
+        }
+
+        IEnumerable<string> pairs = query.Split('&', StringSplitOptions.RemoveEmptyEntries).Select(pair =>
+        {
+            int separator = pair.IndexOf('=', StringComparison.Ordinal);
+            if (separator < 0)
+            {
+                return Uri.EscapeDataString(Uri.UnescapeDataString(pair));
+            }
+
+            string key = Uri.EscapeDataString(Uri.UnescapeDataString(pair[..separator]));
+            string value = Uri.EscapeDataString(Uri.UnescapeDataString(pair[(separator + 1)..]));
+            return $"{key}={value}";
+        });
+
+        return string.Join('&', pairs);
     }
 }
