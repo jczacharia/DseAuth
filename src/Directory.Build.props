@@ -20,7 +20,9 @@
     <NuGetAuditMode>all</NuGetAuditMode>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <SpaRoot>../Dse.UI</SpaRoot>
+    <!-- Anchored to this props file's dir (src/), not the consuming project, so it resolves to the
+         repo-root Dse.UI regardless of how deep under src/ the project lives. -->
+    <SpaRoot>$(MSBuildThisFileDirectory)../Dse.UI</SpaRoot>
     <NodePrefix>npx --yes -p node@26.3.0 -p pnpm@11.9.0</NodePrefix>
   </PropertyGroup>
 

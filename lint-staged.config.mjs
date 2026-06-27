@@ -27,14 +27,21 @@ export default {
   // Scope to a single project when the commit stays within one; fall back to the solution otherwise
   // (N project loads can cost more than one .slnx load). --no-restore: the IDE has already restored.
   '*.cs': (files) => {
-    const rel = files.map((file) => relative(process.cwd(), file)).join(' ');
-    const projects = new Set(files.map((file) => nearestProject(file)));
-    const onlyProject = projects.size === 1 ? [...projects][0] : null;
-    const target = onlyProject ? relative(process.cwd(), onlyProject) : 'Dse.slnx';
-    return [
-      `dotnet format style ${target} --include ${rel} --severity info --verbosity detailed --no-restore`,
-      `dotnet csharpier format ${rel}`,
-    ];
+    const rel = (list) => list.map((file) => relative(process.cwd(), file)).join(' ');
+    // File-based apps under scripts/ belong to no project; dotnet format needs a project/solution, so
+    // it only handles project files. CSharpier is path-based and formats everything.
+    const inProject = files.filter((file) => nearestProject(file));
+    const cmds = [];
+    if (inProject.length) {
+      const projects = new Set(inProject.map((file) => nearestProject(file)));
+      const onlyProject = projects.size === 1 ? [...projects][0] : null;
+      const target = onlyProject ? relative(process.cwd(), onlyProject) : 'Dse.slnx';
+      cmds.push(
+        `dotnet format style ${target} --include ${rel(inProject)} --severity info --verbosity detailed --no-restore`,
+      );
+    }
+    cmds.push(`dotnet csharpier format ${rel(files)}`);
+    return cmds;
   },
   '*.{ts,js,html,json,css,scss,md,svg,csproj,esproj}': ['prettier --write'],
 };

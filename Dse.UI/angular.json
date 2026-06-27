@@ -52,7 +52,7 @@
             ],
             "styles": ["src/styles.css"],
             "outputPath": {
-              "base": "../Dse.Api/wwwroot",
+              "base": "../src/Dse.Api/wwwroot",
               "browser": ""
             }
           },

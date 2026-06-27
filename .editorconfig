@@ -228,7 +228,7 @@ dotnet_diagnostic.CA2208.severity = warning    # Instantiate argument exceptions
 file_header_template = Copyright (c) PNC Financial Services. All rights reserved.
 
 # Test projects — relax rules that fight test readability
-[Dse.Tests/**.cs]
+[src/Dse.Tests/**.cs]
 dotnet_diagnostic.CA1707.severity = none    # Underscores in test names
 dotnet_diagnostic.CA1822.severity = none    # Test methods need not be static
 dotnet_diagnostic.CA1861.severity = none    # Constant arrays as inline test data

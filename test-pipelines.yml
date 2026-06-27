@@ -51,7 +51,7 @@ variables:
   - name: build_proj
     value: 'Dse.slnx'
   - name: publish_proj
-    value: 'Dse.Api/Dse.Api.csproj'
+    value: 'src/Dse.Api/Dse.Api.csproj'
   - name: runtime_identifier
     value: 'linux-x64'
   - name: build_configuration
