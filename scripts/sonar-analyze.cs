@@ -61,8 +61,8 @@ try
             "/d:sonar.scm.disabled=true",
             "/d:sonar.sourceEncoding=UTF-8",
             $"/d:sonar.exclusions={exclusions}",
+            "/d:sonar.typescript.tsconfigPaths=Dse.UI/tsconfig.json",
             "/d:sonar.javascript.lcov.reportPaths=Dse.UI/coverage/lcov.info",
-            "/d:sonar.testExecutionReportPaths=Dse.UI/coverage/test-coverage.xml",
             $"/d:sonar.javascript.exclusions={jsExclusions}",
             $"/d:sonar.coverage.exclusions={testExclusions}",
             $"/d:sonar.test.exclusions={testExclusions}",
@@ -97,11 +97,6 @@ catch (Exception e)
 {
     Console.Error.WriteLine($"!! {e.Message}");
     return 1;
-}
-finally
-{
-    if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SONAR_KEEP_CLONE")) && Directory.Exists(cloneDir))
-        Directory.Delete(cloneDir, recursive: true);
 }
 
 static string Capture(string file, params string[] args)
