@@ -8,13 +8,14 @@ import {relative} from 'node:path';
  * @type {import('lint-staged').Configuration}
  */
 export default {
-  'Dse.UI/**/*.{ts,js,html}': ['pnpm --filter dse exec eslint --fix'],
+  'Dse.UI/**/*.{ts,js,html}': ['pnpm --filter dse exec eslint --cache --fix'],
   // C# is two passes: `dotnet format style` is the `eslint --fix` analog (auto-removes unused usings,
   // inserts file headers, fixes accessibility modifiers, modernizes), then CSharpier owns final layout.
+  // --no-restore: skip the implicit up-to-date restore check; the IDE has already restored in normal dev.
   '*.cs': (files) => {
     const list = files.map((file) => relative(process.cwd(), file)).join(' ');
     return [
-      `dotnet format style Dse.slnx --include ${list} --severity info --verbosity detailed`,
+      `dotnet format style Dse.slnx --include ${list} --severity info --verbosity detailed --no-restore`,
       `dotnet csharpier format ${list}`,
     ];
   },
