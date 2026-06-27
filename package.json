@@ -12,7 +12,7 @@
     "lint": "pnpm --filter dse run lint",
     "lint:fix": "pnpm --filter dse run lint:fix",
     "fix": "dotnet tool restore && dotnet format style Dse.slnx --verbosity diagnostic --severity info && dotnet format analyzers Dse.slnx --verbosity diagnostic --severity info && dotnet csharpier format . && pnpm --filter dse run lint:fix && prettier --write .",
-    "fix:cs": "dotnet format style Dse.slnx --verbosity diagnostic --severity info && dotnet format analyzers Dse.slnx --verbosity diagnostic --severity info && dotnet csharpier format .",
+    "fix:cs": "dotnet tool restore && dotnet format style Dse.slnx --verbosity diagnostic --severity info && dotnet format analyzers Dse.slnx --verbosity diagnostic --severity info && dotnet csharpier format .",
     "csharpier": "dotnet csharpier format .",
     "csharpier:check": "dotnet csharpier check ."
   },
