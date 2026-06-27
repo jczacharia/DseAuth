@@ -24,7 +24,7 @@ if (string.IsNullOrEmpty(token))
 }
 
 var hostUrl = Env("SONAR_HOST_URL", "http://localhost:9000");
-var key = Env("SONAR_PROJECT_KEY", "dse");
+var key = Env("SONAR_PROJECT_KEY", "ddd");
 var version = Env("SONAR_PROJECT_VERSION", "2.2.2");
 var config = Env("SONAR_BUILD_CONFIG", "Release");
 
@@ -32,7 +32,7 @@ var config = Env("SONAR_BUILD_CONFIG", "Release");
 // .playwright are regenerated inside the clone (JS/HTML sensors filesystem-scan past the bin exclusion);
 // scripts/ holds these file-based dev tools, not product code. Keep analysis to real source.
 const string exclusions =
-    "**/obj/**,**/bin/**,**/node_modules/**,**/coverage/**,**/.playwright/**,**/*.bin,**/*Tests*.cs,**/*testresult*.xml,**/*opencover*.xml,**/Program.cs,**/*Dockerfile*,**/quality_engineering/**,**/scripts/**,**/Dse.UI/src/app/api/**,**/Dse.UI/src/app/ui/**";
+    "**/obj/**,**/bin/**,**/node_modules/**,**/coverage/**,**/.playwright/**,**/*Tests*.cs,**/*testresult*.xml,**/wwwroot/**,**/*opencover*.xml,**/Program.cs,**/*Dockerfile*,**/quality_engineering/**,**/scripts/**,**/Dse.UI/src/app/api/**,**/Dse.UI/src/app/ui/**,lint-staged.config.mjs";
 const string jsExclusions = "**/node_modules/**,**/bin/**,**/.playwright/**,**/coverage/**";
 const string testExclusions = "**/*Tests*.cs,**/*testresult*.xml,**/*opencover*.xml";
 
@@ -61,7 +61,6 @@ try
             "/d:sonar.scm.disabled=true",
             "/d:sonar.sourceEncoding=UTF-8",
             $"/d:sonar.exclusions={exclusions}",
-            "/d:sonar.typescript.tsconfigPaths=Dse.UI/tsconfig.json",
             "/d:sonar.javascript.lcov.reportPaths=Dse.UI/coverage/lcov.info",
             $"/d:sonar.javascript.exclusions={jsExclusions}",
             $"/d:sonar.coverage.exclusions={testExclusions}",
