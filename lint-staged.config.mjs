@@ -9,6 +9,14 @@ import {relative} from 'node:path';
  */
 export default {
   'Dse.UI/**/*.{ts,js,html}': ['pnpm --filter dse exec eslint --fix'],
-  '*.cs': (files) => `dotnet csharpier format ${files.map((file) => relative(process.cwd(), file)).join(' ')}`,
+  // C# is two passes: `dotnet format style` is the `eslint --fix` analog (auto-removes unused usings,
+  // inserts file headers, fixes accessibility modifiers, modernizes), then CSharpier owns final layout.
+  '*.cs': (files) => {
+    const list = files.map((file) => relative(process.cwd(), file)).join(' ');
+    return [
+      `dotnet format style Dse.slnx --include ${list} --severity info --verbosity diagnostic`,
+      `dotnet csharpier format ${list}`,
+    ];
+  },
   '*.{ts,js,html,json,css,scss,md,svg,csproj,esproj}': ['prettier --write'],
 };

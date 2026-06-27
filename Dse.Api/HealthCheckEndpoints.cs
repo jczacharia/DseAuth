@@ -1,7 +1,8 @@
 // Copyright (c) PNC Financial Services. All rights reserved.
 
 using System.Reflection;
-using Dse.Core;
+using Dse;
+using Dse;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;

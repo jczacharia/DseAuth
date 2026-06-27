@@ -54,7 +54,7 @@ public static class VogenExtensions
     {
         public bool IsVogenValueObject()
         {
-            var generatedCode = targetType.GetCustomAttribute<GeneratedCodeAttribute>();
+            GeneratedCodeAttribute? generatedCode = targetType.GetCustomAttribute<GeneratedCodeAttribute>();
             return generatedCode is { Tool: "Vogen" };
         }
     }

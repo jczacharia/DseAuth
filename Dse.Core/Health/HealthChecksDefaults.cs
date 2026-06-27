@@ -1,8 +1,8 @@
 // Copyright (c) PNC Financial Services. All rights reserved.
 
-namespace Dse.Core;
+namespace Dse.Health;
 
-public static class HealthChecksCore
+public static class HealthChecksDefaults
 {
     /// <summary>
     /// Shared readiness-probe budget. Evaluated at health-check registration time (before options bind), so it is a

@@ -21,11 +21,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Scalar.AspNetCore" Version="2.16.5" />
+    <PackageReference Include="ServiceScan.SourceGenerator" Version="3.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Dse.Confluence\Dse.Confluence.csproj" />
-    <ProjectReference Include="..\Dse\Dse.csproj" />
+    <ProjectReference Include="..\Dse.Sites\Dse.Sites.csproj" />
+    <ProjectReference Include="..\Dse.SonarQube\Dse.SonarQube.csproj" />
+    <ProjectReference Include="..\Dse.Core\Dse.Core.csproj" />
     <ProjectReference Include="..\Dse.Jira\Dse.Jira.csproj" />
   </ItemGroup>
 

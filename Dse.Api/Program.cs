@@ -1,11 +1,10 @@
 // Copyright (c) PNC Financial Services. All rights reserved.
 
-using System.Security.Claims;
 using Dse;
 using Dse.Api;
 using Dse.Api.Authentication;
 using Dse.Api.Gateway;
-using Dse.Core;
+using Dse.Api.Scanning;
 using Dse.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -19,6 +18,9 @@ if (builder.Environment.IsLocalBuild())
 {
     builder.Configuration.AddUserSecrets("dse");
 }
+
+builder.Services.AddDseOptions();
+builder.Services.AddDseValidators();
 
 builder.Services.AddGatewayIntegration();
 builder.Services.AddPingGateway(builder.Configuration);
@@ -75,12 +77,6 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-api.MapGet(
-    "/me",
-    (ClaimsPrincipal user) =>
-        TypedResults.Json(new { name = user.Identity?.Name, claims = user.Claims.Select(c => new { c.Type, c.Value }) })
-);
 
 foreach (WebAppExtender reg in app.Services.GetServices<WebAppExtender>())
 {

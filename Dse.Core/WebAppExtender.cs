@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dse.Core;
+namespace Dse;
 
 public sealed class WebAppExtender(Action<WebApplication> configure)
 {

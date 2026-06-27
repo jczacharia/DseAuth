@@ -4,7 +4,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace Dse.Core;
+namespace Dse;
 
 public interface IOpenApiComponent;
 
@@ -25,7 +25,7 @@ public static class OpenApiComponentExtensions
                             )
                     )
                     {
-                        OpenApiSchema schema = await context.GetOrCreateSchemaAsync(
+                        var schema = await context.GetOrCreateSchemaAsync(
                             type,
                             parameterDescription: null,
                             cancellationToken

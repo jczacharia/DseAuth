@@ -6,9 +6,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Deterministic>true</Deterministic>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <!-- SEVERITY is always-on (.editorconfig): live IDE squiggles + Debug-build warnings, so nothing
+         is hidden. ENFORCEMENT (TreatWarningsAsErrors / EnforceCodeStyleInBuild) is Release-scoped and
+         lives in Directory.Build.targets — $(Configuration) is only reliably resolved there, after the
+         SDK applies its default (it is not yet defaulted at this props import). AnalysisMode=Default
+         (not Recommended): only the rules explicitly escalated in .editorconfig are enforced, so stale
+         pre-C#14 Design/Naming rules can't misfire on extension members. -->
+    <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>Default</AnalysisMode>
     <NuGetAudit>true</NuGetAudit>
     <NuGetAuditMode>all</NuGetAuditMode>

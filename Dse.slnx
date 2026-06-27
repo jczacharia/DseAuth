@@ -1,13 +1,17 @@
 <Solution>
-  <Project Path="Dse.Confluence/Dse.Confluence.csproj" />
-  <Project Path="Dse.Jira/Dse.Jira.csproj" />
-  <Project Path="Dse.Sites/Dse.Sites.csproj" />
-  <Project Path="Dse.SonarQube/Dse.SonarQube.csproj" />
   <Project Path="Dse.Tests/Dse.Tests.csproj" />
   <Project Path="Dse.UI/Dse.UI.esproj">
     <BuildType Project="Debug" />
     <Build />
   </Project>
+  <Folder Name="/Core/">
+    <Project Path="Dse.Core\Dse.Core.csproj" />
+  </Folder>
+  <Folder Name="/Sources/">
+    <Project Path="Dse.Confluence/Dse.Confluence.csproj" />
+    <Project Path="Dse.Jira/Dse.Jira.csproj" />
+    <Project Path="Dse.Sites/Dse.Sites.csproj" />
+    <Project Path="Dse.SonarQube/Dse.SonarQube.csproj" />
+  </Folder>
   <Project Path="Dse.Api/Dse.Api.csproj" />
-  <Project Path="Dse\Dse.csproj" />
 </Solution>

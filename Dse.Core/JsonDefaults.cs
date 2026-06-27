@@ -2,7 +2,7 @@
 
 using System.Text.Json;
 
-namespace Dse.Core;
+namespace Dse;
 
 public static class JsonDefaults
 {

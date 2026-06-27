@@ -1,6 +1,6 @@
 // Copyright (c) PNC Financial Services. All rights reserved.
 
-using Dse.Core;
+using Dse;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;

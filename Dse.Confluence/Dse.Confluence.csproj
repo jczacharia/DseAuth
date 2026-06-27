@@ -6,6 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dse\Dse.csproj" />
+    <ProjectReference Include="..\Dse.Core\Dse.Core.csproj" />
   </ItemGroup>
 </Project>
