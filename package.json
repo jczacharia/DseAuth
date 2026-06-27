@@ -15,7 +15,8 @@
     "fix": "dotnet tool restore && dotnet format Dse.slnx --no-restore --verbosity detailed --severity info && dotnet csharpier format . && pnpm --filter dse run lint:fix && prettier --write .",
     "fix:cs": "dotnet tool restore && dotnet format Dse.slnx --no-restore --verbosity detailed --severity info && dotnet csharpier format .",
     "csharpier": "dotnet csharpier format .",
-    "csharpier:check": "dotnet csharpier check ."
+    "csharpier:check": "dotnet csharpier check .",
+    "ado:ci:preview": "node scripts/ado-preview.mjs"
   },
   "devDependencies": {
     "cspell": "^10.0.1",
