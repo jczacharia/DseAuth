@@ -1,11 +1,13 @@
 // Copyright (c) PNC Financial Services. All rights reserved.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.Extensions.Hosting;
 
 namespace Dse;
 
-public static class DseEnvironment
+[ExcludeFromCodeCoverage]
+public static class CoreEnvironment
 {
     public static readonly bool IsRelease =
         Assembly

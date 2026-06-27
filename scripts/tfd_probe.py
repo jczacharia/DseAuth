@@ -436,8 +436,8 @@ def main(argv: list[str]) -> int:
                          "or by echoing $(System.CollectionUri) in any pipeline run).")
     ap.add_argument("--project", default=os.environ.get("ADO_PROJECT", KB["automation_project"]))
     ap.add_argument("--templates-repo", default=KB["templates_repo"])
-    ap.add_argument("--api-version", default=os.environ.get("ADO_API_VERSION", "7.1"),
-                    help="ADO Server 2022.2=7.1 (default); use 6.0 for 2020.")
+    ap.add_argument("--api-version", default=os.environ.get("ADO_API_VERSION", "7.1-preview.1"),
+                    help="ADO Server 2022.2 = 7.1-preview.1 (default); use 6.0 for 2020.")
     ap.add_argument("--artifactory", default=os.environ.get("ARTIFACTORY_BASE", KB["artifactory_base"]))
     ap.add_argument("--sonar-host", default=os.environ.get("SONAR_HOST"))
     ap.add_argument("--git-host", default=os.environ.get("GIT_HOST", KB["git_host"]))

@@ -52,7 +52,7 @@ builder.Services.AddOpenApi(opts =>
     );
 });
 
-if (DseEnvironment.IsDocumentGenerationBuild)
+if (CoreEnvironment.IsDocumentGenerationBuild)
 {
     // Don't validate when generating OpenAPI documents; else with throw
     builder.Services.RemoveAll<IStartupValidator>();
