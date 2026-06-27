@@ -16,6 +16,7 @@ opencover
 pnpm
 prettierignore
 prettierrc
+PROXYURL
 Qube
 Roslyn
 signality

@@ -32,7 +32,7 @@ var config = Env("SONAR_BUILD_CONFIG", "Release");
 // .playwright are regenerated inside the clone (JS/HTML sensors filesystem-scan past the bin exclusion);
 // scripts/ holds these file-based dev tools, not product code. Keep analysis to real source.
 const string exclusions =
-    "**/obj/**,**/bin/**,**/node_modules/**,**/coverage/**,**/.playwright/**,**/*Tests*.cs,**/*testresult*.xml,**/wwwroot/**,**/*opencover*.xml,**/Program.cs,**/*Dockerfile*,**/quality_engineering/**,**/scripts/**,**/Dse.UI/src/app/api/**,**/Dse.UI/src/app/ui/**,lint-staged.config.mjs";
+    "**/obj/**,**/bin/**,**/node_modules/**,**/coverage/**,**/.playwright/**,**/*Tests*.cs,**/*testresult*.xml,**/wwwroot/**,**/*opencover*.xml,**/Program.cs,**/*Dockerfile*,**/quality_engineering/**,**/scripts/**,**/Dse.UI/src/app/api/**,**/Dse.UI/src/app/ui/**,**/lint-staged.config.mjs";
 const string jsExclusions = "**/node_modules/**,**/bin/**,**/.playwright/**,**/coverage/**";
 const string testExclusions = "**/*Tests*.cs,**/*testresult*.xml,**/*opencover*.xml";
 
@@ -61,7 +61,11 @@ try
             "/d:sonar.scm.disabled=true",
             "/d:sonar.sourceEncoding=UTF-8",
             $"/d:sonar.exclusions={exclusions}",
-            "/d:sonar.javascript.lcov.reportPaths=Dse.UI/coverage/lcov.info",
+            // Absolute paths: the .NET scanner resolves relative coverage paths per-module (against
+            // the Dse.UI module base dir), which doubles to Dse.UI/Dse.UI/... and silently finds nothing.
+            // Unit (Vitest) + E2E (Playwright) lcov are unioned per line by Sonar.
+            $"/d:sonar.javascript.lcov.reportPaths={Path.Combine(cloneDir, "Dse.UI", "coverage", "lcov.info")},{Path.Combine(cloneDir, "Dse.UI", "coverage", "e2e", "lcov.info")}",
+            $"/d:sonar.testExecutionReportPaths={Path.Combine(cloneDir, "Dse.UI", "coverage", "ut_report.xml")}",
             $"/d:sonar.javascript.exclusions={jsExclusions}",
             $"/d:sonar.coverage.exclusions={testExclusions}",
             $"/d:sonar.test.exclusions={testExclusions}",

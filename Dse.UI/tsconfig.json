@@ -97,6 +97,7 @@
     {"path": "./tsconfig.app.json"},
     {"path": "./tsconfig.dev.json"},
     {"path": "./tsconfig.node.json"},
-    {"path": "./tsconfig.spec.json"}
+    {"path": "./tsconfig.spec.json"},
+    {"path": "./tsconfig.e2e.json"}
   ]
 }

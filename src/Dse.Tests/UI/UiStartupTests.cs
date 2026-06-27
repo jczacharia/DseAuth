@@ -2,12 +2,8 @@
 
 namespace Dse.Tests.UI;
 
-public sealed class UiStartupTests(ITestOutputHelper outputHelper) : UiTest(outputHelper)
+public sealed class UiStartupTests(ITestOutputHelper output) : ScenarioE2ETest(output)
 {
     [Fact]
-    public async Task AppRootInDocument()
-    {
-        await Page.GotoAsync("/");
-        await Expect(Page).ToHaveTitleAsync("Enterprise Search");
-    }
+    public Task AppRoot() => RunScenarioAsync("@startup");
 }

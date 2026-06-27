@@ -50,7 +50,7 @@ variables:
 
       sonar.javascript.exclusions=**/node_modules/**,**/bin/**,**/.playwright/**,**/coverage/**
 
-      sonar.javascript.lcov.reportPaths=$(System.DefaultWorkingDirectory)/Dse.UI/coverage/lcov.info
+      sonar.javascript.lcov.reportPaths=$(System.DefaultWorkingDirectory)/Dse.UI/coverage/lcov.info,$(System.DefaultWorkingDirectory)/Dse.UI/coverage/e2e/lcov.info
 
       sonar.testExecutionReportPaths=$(System.DefaultWorkingDirectory)/Dse.UI/coverage/ut_report.xml
 

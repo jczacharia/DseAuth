@@ -96,6 +96,16 @@
                 "styles": true,
                 "vendor": true
               }
+            },
+            "e2e": {
+              "tsConfig": "tsconfig.app.json",
+              "outputHashing": "all",
+              "sourceMap": {
+                "hidden": false,
+                "scripts": true,
+                "sourcesContent": true,
+                "vendor": true
+              }
             }
           },
           "defaultConfiguration": "production"

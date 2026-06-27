@@ -14,14 +14,8 @@ internal static class TestsInitializer
     {
         ApiInitializer.Initialize();
 
-        if (
-            Environment.GetEnvironmentVariable("CI")?.Equals("true", StringComparison.InvariantCulture) is true
-            && Microsoft.Playwright.Program.Main(["install", "chromium"]) is var exitCode and not 0
-        )
-        {
-            Console.Error.WriteLine($"Playwright install failed with exit code {exitCode}.");
-        }
-
+        // Browser provisioning is handled by the InstallPlaywright MSBuild target (proxy-aware, Node
+        // runner). Nothing to install here.
         if (Debugger.IsAttached)
         {
             Environment.SetEnvironmentVariable("PWDEBUG", "1");

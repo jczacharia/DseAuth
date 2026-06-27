@@ -21,7 +21,7 @@ export default defineConfig(({mode}) => ({
       reportsDirectory: 'coverage',
       reporter: ['text', 'lcovonly', ['cobertura', {file: 'test-coverage.xml'}]],
       include: ['src/**/*.ts'],
-      exclude: ['src/**/*.spec.ts', 'src/testing/**', 'src/main.ts', 'src/app/ui/**'],
+      exclude: ['src/**/*.spec.ts', 'src/testing/**', 'src/main.ts', 'src/app/ui/**', 'src/app/api/**'],
     },
   },
   define: {

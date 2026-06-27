@@ -30,8 +30,17 @@
     <PackageReference Include="xunit.v3.mtp-off" Version="4.0.0-pre.128" />
   </ItemGroup>
 
+  <Target Name="InstallPlaywright" AfterTargets="BuildSpa" Condition="'$(AGENT_PROXYURL)' != ''">
+    <Message Importance="high" Text="Installing Playwright Chromium via agent proxy..." />
+    <Exec
+      WorkingDirectory="$(SpaRoot)"
+      Command="$(NodePrefix) npx playwright install chromium"
+      EnvironmentVariables="HTTPS_PROXY=$(AGENT_PROXYURL)"
+    />
+  </Target>
+
   <Target Name="BuildSpa" BeforeTargets="Build" Condition="!Exists('../Dse.Api/wwwroot/index.html')">
-    <Exec WorkingDirectory="$(SpaRoot)" Command="$(NodePrefix) npm run build" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="$(NodePrefix) npm run build:e2e" />
   </Target>
 
   <Target Name="RunSpaTests" AfterTargets="VSTest" Condition="'$(RunSpaTests)' != 'skip'">
