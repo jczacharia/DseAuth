@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="src/Dse.Tests/Dse.Tests.csproj" />
-  <Project Path="Dse.UI/Dse.UI.esproj">
+  <Project Path="ui/ui.esproj">
     <BuildType Project="Debug" />
     <Build />
   </Project>

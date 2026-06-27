@@ -41,18 +41,18 @@ variables:
       **/quality_engineering/**,
       **/scripts/**,
       **/lint-staged.config.mjs,
-      **/Dse.UI/src/app/api/**,
-      **/Dse.UI/src/app/ui/**
+      **/ui/src/app/api/**,
+      **/ui/src/app/ui/**
 
       sonar.sourceEncoding=UTF-8
 
-      sonar.sources=$(System.DefaultWorkingDirectory)/src,$(System.DefaultWorkingDirectory)/Dse.UI/src
+      sonar.sources=$(System.DefaultWorkingDirectory)/src,$(System.DefaultWorkingDirectory)/ui/src
 
       sonar.javascript.exclusions=**/node_modules/**,**/bin/**,**/.playwright/**,**/coverage/**
 
-      sonar.javascript.lcov.reportPaths=$(System.DefaultWorkingDirectory)/Dse.UI/coverage/lcov.info,$(System.DefaultWorkingDirectory)/Dse.UI/coverage/e2e/lcov.info
+      sonar.javascript.lcov.reportPaths=$(System.DefaultWorkingDirectory)/ui/coverage/lcov.info,$(System.DefaultWorkingDirectory)/ui/coverage/e2e/lcov.info
 
-      sonar.testExecutionReportPaths=$(System.DefaultWorkingDirectory)/Dse.UI/coverage/ut_report.xml
+      sonar.testExecutionReportPaths=$(System.DefaultWorkingDirectory)/ui/coverage/ut_report.xml
 
       sonar.qualitygate.wait=true
   - name: qfaasDirectory

@@ -1,5 +1,5 @@
 packages:
-  - Dse.UI
+  - ui
 
 allowBuilds:
   '@parcel/watcher': true

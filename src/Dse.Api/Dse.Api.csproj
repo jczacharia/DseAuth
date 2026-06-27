@@ -40,7 +40,7 @@
     BeforeTargets="Build"
     Condition="'$(Configuration)' == 'Debug' and !Exists('$(SpaRoot)/node_modules')"
   >
-    <Message Importance="high" Text="Installing Dse.UI dependencies (first run)..." />
+    <Message Importance="high" Text="Installing ui dependencies (first run)..." />
     <Exec WorkingDirectory="$(SpaRoot)" Command="$(NodePrefix) pnpm i" />
   </Target>
 

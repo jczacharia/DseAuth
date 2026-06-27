@@ -1,7 +1,7 @@
 {
   // ─────────────────────────────────────────────────────────────────────────
   // Formatting — Prettier, everywhere. Resolves from the ROOT node_modules
-  // (walks up from each file), so it formats Dse.UI files too.
+  // (walks up from each file), so it formats ui files too.
   // ─────────────────────────────────────────────────────────────────────────
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -17,21 +17,21 @@
   },
 
   // ─────────────────────────────────────────────────────────────────────────
-  // ESLint — scoped to the Dse.UI package only. workingDirectories sets the
-  // process cwd to Dse.UI, so the extension resolves eslint + eslint.config.ts
-  // from Dse.UI/node_modules and ignores everything outside the folder.
+  // ESLint — scoped to the ui package only. workingDirectories sets the
+  // process cwd to ui, so the extension resolves eslint + eslint.config.ts
+  // from ui/node_modules and ignores everything outside the folder.
   // ─────────────────────────────────────────────────────────────────────────
-  "eslint.workingDirectories": [{"directory": "Dse.UI", "changeProcessCWD": true}],
+  "eslint.workingDirectories": [{"directory": "ui", "changeProcessCWD": true}],
   "eslint.validate": ["javascript", "typescript", "html"],
   "editor.codeActionsOnSave": {"source.fixAll.eslint": "explicit"},
 
   // ─────────────────────────────────────────────────────────────────────────
-  // Tailwind — scoped to the Dse.UI package only. Maps the v4 CSS entry to the
-  // Dse.UI/** glob, so IntelliSense activates only there and resolves
-  // tailwindcss from Dse.UI/node_modules.
+  // Tailwind — scoped to the ui package only. Maps the v4 CSS entry to the
+  // ui/** glob, so IntelliSense activates only there and resolves
+  // tailwindcss from ui/node_modules.
   // ─────────────────────────────────────────────────────────────────────────
   "tailwindCSS.experimental.configFile": {
-    "Dse.UI/src/styles.css": "Dse.UI/**"
+    "ui/src/styles.css": "ui/**"
   },
   "tailwindCSS.classAttributes": ["class", "className", "ngClass", "class:list"],
   "tailwindCSS.classFunctions": ["clsx", "cva", "cx", "cn"],
@@ -46,7 +46,7 @@
   // TypeScript — use the workspace TS from the UI toolchain.
   // (Corrected from the old non-standard "js/ts.*" keys, which VS Code ignores.)
   // ─────────────────────────────────────────────────────────────────────────
-  "js/ts.tsdk.path": "Dse.UI/node_modules/typescript/lib",
+  "js/ts.tsdk.path": "ui/node_modules/typescript/lib",
   "js/ts.preferences.importModuleSpecifier": "non-relative",
 
   // ─────────────────────────────────────────────────────────────────────────

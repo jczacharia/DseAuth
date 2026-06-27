@@ -17,7 +17,7 @@
     "**/obj/**",
     "**/coverage/**",
     ".angular/**",
-    "Dse.UI/src/app/api/**",
+    "ui/src/app/api/**",
     "pnpm-lock.yaml",
     "*.svg"
   ]

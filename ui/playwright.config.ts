@@ -1,6 +1,6 @@
 import {defineConfig, devices} from '@playwright/test';
 
-// Lives at the SPA root so `npx playwright test` (run by the .NET orchestrator from Dse.UI) discovers
+// Lives at the SPA root so `npx playwright test` (run by the .NET orchestrator from ui) discovers
 // it; testDir scopes runs to e2e/ only, never the Vitest unit specs under src/.
 // The app is hosted by .NET (ApiHost/Kestrel), which seeds Elasticsearch and runs one scenario by
 // @tag against the live URL — so no `webServer` here.

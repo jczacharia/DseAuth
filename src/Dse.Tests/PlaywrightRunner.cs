@@ -50,13 +50,13 @@ public static class PlaywrightRunner
     private static string SpaRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !Directory.Exists(Path.Combine(dir.FullName, "Dse.UI")))
+        while (dir is not null && !Directory.Exists(Path.Combine(dir.FullName, "ui")))
         {
             dir = dir.Parent;
         }
 
         return dir is null
-            ? throw new DirectoryNotFoundException("Dse.UI not found above the test output directory")
-            : Path.Combine(dir.FullName, "Dse.UI");
+            ? throw new DirectoryNotFoundException("ui not found above the test output directory")
+            : Path.Combine(dir.FullName, "ui");
     }
 }

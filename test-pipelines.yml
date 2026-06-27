@@ -43,7 +43,7 @@ variables:
   - name: app_name
     value: searchapi
   - name: sonar_custom_exclusions
-    value: '*Tests*.cs,*testresult*.xml,*opencover*.xml,**/Program.cs,*Dockerfile*,**/quality_engineering/**,**/Dse.Tests/**,**/Dse.UI/src/app/api/**,**/Dse.UI/src/app/ui/**'
+    value: '*Tests*.cs,*testresult*.xml,*opencover*.xml,**/Program.cs,*Dockerfile*,**/quality_engineering/**,**/Dse.Tests/**,**/ui/src/app/api/**,**/ui/src/app/ui/**'
   - name: dotnet_version
     value: '10.0'
   - name: restore_proj

@@ -248,7 +248,7 @@ importers:
         specifier: ~6.0.3
         version: 6.0.3
 
-  Dse.UI:
+  ui:
     dependencies:
       '@angular/aria':
         specifier: 22.1.0-next.1
