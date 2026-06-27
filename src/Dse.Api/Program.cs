@@ -14,11 +14,7 @@ using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-if (builder.Environment.IsLocalBuild())
-{
-    builder.Configuration.AddUserSecrets("dse");
-}
-
+builder.Configuration.AddUserSecrets("dse");
 builder.Services.AddDseOptions();
 builder.Services.AddDseValidators();
 

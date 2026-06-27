@@ -47,7 +47,6 @@ try
     // Fresh checkout of the committed tree, pinned to the current HEAD commit.
     Run("git", ["clone", "--quiet", repoRoot, cloneDir]);
     Run("git", ["-C", cloneDir, "checkout", "--quiet", commit]);
-
     Run(
         "dotnet",
         [
@@ -62,6 +61,8 @@ try
             "/d:sonar.scm.disabled=true",
             "/d:sonar.sourceEncoding=UTF-8",
             $"/d:sonar.exclusions={exclusions}",
+            "/d:sonar.javascript.lcov.reportPaths=Dse.UI/coverage/lcov.info",
+            "/d:sonar.testExecutionReportPaths=Dse.UI/coverage/test-coverage.xml",
             $"/d:sonar.javascript.exclusions={jsExclusions}",
             $"/d:sonar.coverage.exclusions={testExclusions}",
             $"/d:sonar.test.exclusions={testExclusions}",
