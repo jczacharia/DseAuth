@@ -10,6 +10,7 @@
 .sonarqube
 .sonar-tmp/
 sonar-dump/
+tfd/
 
 # User-specific files
 *.rsuser
