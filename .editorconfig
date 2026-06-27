@@ -14,6 +14,7 @@ trim_trailing_whitespace = true
 max_line_length = 130
 
 # ReSharper properties
+resharper_arguments_literal = positional
 resharper_force_attribute_style = separate
 resharper_max_attribute_length_for_same_line = 120
 resharper_object_creation_when_type_not_evident = target_typed
@@ -72,7 +73,7 @@ dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols = constant_fiel
 dotnet_naming_rule.constant_fields_should_be_pascal_case.style = pascal_case_style
 dotnet_naming_symbols.constant_fields.applicable_kinds = field
 dotnet_naming_symbols.constant_fields.required_modifiers = const
-dotnet_naming_style.pascal_case_style.capitalization = unset
+dotnet_naming_style.pascal_case_style.capitalization = 
 
 # static fields should have s_ prefix
 dotnet_naming_rule.static_fields_should_have_prefix.severity = suggestion
@@ -155,7 +156,7 @@ csharp_space_after_dot = false
 csharp_space_after_keywords_in_control_flow_statements = true
 csharp_space_after_semicolon_in_for_statement = true
 csharp_space_around_binary_operators = before_and_after
-csharp_space_around_declaration_statements = unset
+csharp_space_around_declaration_statements = 
 csharp_space_before_colon_in_inheritance_clause = true
 csharp_space_before_comma = false
 csharp_space_before_dot = false

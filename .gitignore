@@ -9,6 +9,7 @@
 .mcp.json
 .sonarqube
 .sonar-tmp/
+sonar-dump/
 
 # User-specific files
 *.rsuser

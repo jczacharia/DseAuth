@@ -33,10 +33,11 @@ git clone --quiet "$REPO_ROOT" "$CLONE_DIR"
 git -C "$CLONE_DIR" checkout --quiet "$COMMIT"
 cd "$CLONE_DIR"
 
-# node_modules/coverage are absent in the CI container but the build/test steps regenerate them
-# inside this clone; exclude them so analysis matches CI instead of indexing generated files.
-EXCLUSIONS='**/obj/**,**/bin/**,**/node_modules/**,**/coverage/**,**/*.bin,*Tests*.cs,*testresult*.xml,*opencover*.xml,**/Program.cs,*Dockerfile*,**/quality_engineering/**,**/Dse.UI/src/app/api/**,**/Dse.UI/src/app/ui/**'
-TEST_EXCLUSIONS='*Tests*.cs,*testresult*.xml,*opencover*.xml'
+# Patterns are project-relative (**/-prefixed); module-relative patterns are deprecated.
+# node_modules/coverage/.playwright are build/test byproducts regenerated inside this clone
+# (the JS/HTML sensors filesystem-scan them past the bin exclusion); keep analysis to real source.
+EXCLUSIONS='**/obj/**,**/bin/**,**/node_modules/**,**/coverage/**,**/.playwright/**,**/*.bin,**/*Tests*.cs,**/*testresult*.xml,**/*opencover*.xml,**/Program.cs,**/*Dockerfile*,**/quality_engineering/**,**/Dse.UI/src/app/api/**,**/Dse.UI/src/app/ui/**'
+TEST_EXCLUSIONS='**/*Tests*.cs,**/*testresult*.xml,**/*opencover*.xml'
 
 dotnet sonarscanner begin \
   /k:"$PROJECT_KEY" \
@@ -46,7 +47,9 @@ dotnet sonarscanner begin \
   /d:sonar.token="$SONARQUBE_TOKEN_GLOBAL_ANALYSIS" \
   /d:sonar.scanner.skipJreProvisioning=true \
   /d:sonar.scm.disabled=true \
+  /d:sonar.sourceEncoding=UTF-8 \
   /d:sonar.exclusions="$EXCLUSIONS" \
+  /d:sonar.javascript.exclusions="**/node_modules/**,**/bin/**,**/.playwright/**,**/coverage/**" \
   /d:sonar.coverage.exclusions="$TEST_EXCLUSIONS" \
   /d:sonar.test.exclusions="$TEST_EXCLUSIONS" \
   /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
