@@ -2,7 +2,6 @@
 
 using System.Reflection;
 using Dse;
-using Dse;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;

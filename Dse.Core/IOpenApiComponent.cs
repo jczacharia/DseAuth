@@ -25,7 +25,7 @@ public static class OpenApiComponentExtensions
                             )
                     )
                     {
-                        var schema = await context.GetOrCreateSchemaAsync(
+                        OpenApiSchema schema = await context.GetOrCreateSchemaAsync(
                             type,
                             parameterDescription: null,
                             cancellationToken

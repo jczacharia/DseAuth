@@ -14,7 +14,7 @@ export default {
   '*.cs': (files) => {
     const list = files.map((file) => relative(process.cwd(), file)).join(' ');
     return [
-      `dotnet format style Dse.slnx --include ${list} --severity info --verbosity diagnostic`,
+      `dotnet format style Dse.slnx --include ${list} --severity info --verbosity detailed`,
       `dotnet csharpier format ${list}`,
     ];
   },
