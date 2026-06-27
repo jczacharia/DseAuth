@@ -13,7 +13,7 @@ Auth (set what you have; probes needing a missing credential are skipped, not fa
   ARTIFACTORY_TOKEN      JFrog identity/access token (Bearer). OR ARTIFACTORY_USER + ARTIFACTORY_PASS.
   SONAR_TOKEN            SonarQube token (basic auth, token as username).
   DOCKER_USER/DOCKER_PASS  Artifactory-backed docker registry basic creds (usually same as Artifactory).
-  GITLAB_TOKEN           git.pncint.net token, if it is GitLab (PRIVATE-TOKEN header).
+  BITBUCKET_TOKEN        Bitbucket Data Center HTTP access token (Bearer). OR BITBUCKET_USER + BITBUCKET_PASS.
 
 Quick start (on the connected box):
   export ADO_PAT=xxxx ARTIFACTORY_TOKEN=yyyy
@@ -41,12 +41,17 @@ from pathlib import Path
 # Knowledge base — everything mined from tfd/*_expanded_template.yaml. Doubles as documentation.
 # --------------------------------------------------------------------------------------------------
 KB = {
+    # Confirmed product inventory (Jeremy, 2026-06):
+    #   ADO Server 2022.2 (tfd) -> REST api-version 7.1 ; JFrog Enterprise+ 7.104.15 (rpo) ;
+    #   SonarQube Enterprise 2026.1 (sonar) ; Atlassian Bitbucket Data Center 9.4.16 (git).
     "ado_hosts": {"prod": "https://tfd.pncint.net", "qa": "https://tfd-qa.pncint.net"},
     "automation_project": "PNC - ADO Enterprise Automation Pipeline",
     "templates_repo": "pnc-enterprise-templates",
     "templates_ref": "master",
-    "deploy_repo_hint": "git.pncint.net/dse/dse-deploy.git",  # GitOps manifest repo (separate git host)
+    "deploy_repo_hint": "git.pncint.net/dse/dse-deploy.git",  # GitOps manifest repo (Bitbucket)
     "git_host": "https://git.pncint.net",
+    "bitbucket_default_project": "dse",       # project key in git.pncint.net/<key>/<repo>.git
+    "bitbucket_default_repo": "dse-deploy",
     "artifactory_base": "https://rpo.pncint.net/artifactory",
     "docker_registries": [
         "docker-stage.docker.pncint.net",
@@ -190,6 +195,8 @@ class Cfg:
     artifactory: str
     sonar_host: str | None
     git_host: str
+    bb_project: str
+    bb_repo: str
     download_templates: bool
     expand_pipelines: bool
     all_projects: bool
@@ -392,14 +399,31 @@ class Probe:
             self.record(f"docker_{safe}_catalog", self.h.get(f"https://{reg}/v2/_catalog?n=2000", H),
                         note="repository catalog (may be restricted)")
 
-    # ---- git.pncint.net (GitLab probe) -----------------------------------------------------------
-    def git_host(self):
-        H = {"PRIVATE-TOKEN": self.creds["gitlab_token"]} if self.creds.get("gitlab_token") else {}
+    # ---- git.pncint.net (Atlassian Bitbucket Data Center 9.x) -------------------------------------
+    def bitbucket(self):
+        # Bitbucket DC: Bearer HTTP access token, or basic user:app-password.
+        if self.creds.get("bb_token"):
+            H = {"Authorization": f"Bearer {self.creds['bb_token']}", "Accept": "application/json"}
+        else:
+            H = {**basic_headers(self.creds.get("bb_user"), self.creds.get("bb_pass")),
+                 "Accept": "application/json"}
         base = self.c.git_host.rstrip("/")
-        print("\n[ git.pncint.net (GitLab API guess) ]")
-        self.record("git_version", self.h.get(f"{base}/api/v4/version", H),
-                    note="200 => GitLab; the dse-deploy GitOps repo lives here")
-        self.record("git_search_dse", self.h.get(f"{base}/api/v4/projects?search=dse&per_page=100", H))
+        api = f"{base}/rest/api/1.0"
+        bp, br = self.c.bb_project, self.c.bb_repo
+        print("\n[ git.pncint.net (Bitbucket Data Center) ]")
+        self.record("bb_application_properties", self.h.get(f"{api}/application-properties", H),
+                    note="version/build of the Bitbucket instance")
+        self.record("bb_projects", self.h.get(f"{api}/projects?limit=1000", H),
+                    note="all visible projects (project keys)")
+        self.record("bb_repos_in_project", self.h.get(f"{api}/projects/{bp}/repos?limit=1000", H),
+                    note=f"repos under project '{bp}'")
+        # Browse the GitOps manifest repo root + list all its files (reveals Helm/manifest layout).
+        self.record("bb_deploy_browse_root",
+                    self.h.get(f"{api}/projects/{bp}/repos/{br}/browse?at=refs/heads/master&limit=200", H),
+                    note=f"{bp}/{br} root listing")
+        self.record("bb_deploy_files",
+                    self.h.get(f"{api}/projects/{bp}/repos/{br}/files?at=refs/heads/master&limit=2000", H),
+                    note=f"recursive file paths in {bp}/{br}")
 
 
 # --------------------------------------------------------------------------------------------------
@@ -412,11 +436,15 @@ def main(argv: list[str]) -> int:
                          "or by echoing $(System.CollectionUri) in any pipeline run).")
     ap.add_argument("--project", default=os.environ.get("ADO_PROJECT", KB["automation_project"]))
     ap.add_argument("--templates-repo", default=KB["templates_repo"])
-    ap.add_argument("--api-version", default=os.environ.get("ADO_API_VERSION", "6.0"),
-                    help="ADO Server 2022=7.1, 2020=6.0 (default).")
+    ap.add_argument("--api-version", default=os.environ.get("ADO_API_VERSION", "7.1"),
+                    help="ADO Server 2022.2=7.1 (default); use 6.0 for 2020.")
     ap.add_argument("--artifactory", default=os.environ.get("ARTIFACTORY_BASE", KB["artifactory_base"]))
     ap.add_argument("--sonar-host", default=os.environ.get("SONAR_HOST"))
     ap.add_argument("--git-host", default=os.environ.get("GIT_HOST", KB["git_host"]))
+    ap.add_argument("--bb-project", default=os.environ.get("BITBUCKET_PROJECT", KB["bitbucket_default_project"]),
+                    help="Bitbucket project key to enumerate.")
+    ap.add_argument("--bb-repo", default=os.environ.get("BITBUCKET_REPO", KB["bitbucket_default_repo"]),
+                    help="Bitbucket repo slug to browse (the GitOps manifest repo).")
     ap.add_argument("--targets", default="ado,artifactory,sonar,docker,git",
                     help="comma list of probe groups to run.")
     ap.add_argument("--download-templates", action="store_true", help="pull templates repo source locally.")
@@ -439,6 +467,7 @@ def main(argv: list[str]) -> int:
     cfg = Cfg(ado_host=args.ado_host, collection=args.collection, project=args.project,
               templates_repo=args.templates_repo, api=args.api_version, artifactory=args.artifactory,
               sonar_host=args.sonar_host, git_host=args.git_host,
+              bb_project=args.bb_project, bb_repo=args.bb_repo,
               download_templates=args.download_templates, expand_pipelines=args.expand_pipelines,
               all_projects=args.all_projects)
     creds = {
@@ -449,7 +478,9 @@ def main(argv: list[str]) -> int:
         "sonar_token": os.environ.get("SONAR_TOKEN"),
         "docker_user": os.environ.get("DOCKER_USER"),
         "docker_pass": os.environ.get("DOCKER_PASS"),
-        "gitlab_token": os.environ.get("GITLAB_TOKEN"),
+        "bb_token": os.environ.get("BITBUCKET_TOKEN"),
+        "bb_user": os.environ.get("BITBUCKET_USER"),
+        "bb_pass": os.environ.get("BITBUCKET_PASS"),
     }
 
     print(f"== TFD recon probe ==  out={out}  dry_run={args.dry_run}  insecure={args.insecure}")
@@ -460,7 +491,7 @@ def main(argv: list[str]) -> int:
     probe = Probe(http, cfg, out, creds)
     targets = {t.strip() for t in args.targets.split(",") if t.strip()}
     dispatch = {"ado": probe.ado, "artifactory": probe.artifactory, "sonar": probe.sonar,
-                "docker": probe.docker, "git": probe.git_host}
+                "docker": probe.docker, "git": probe.bitbucket}
     for t in ("ado", "artifactory", "sonar", "docker", "git"):
         if t in targets:
             try:
