@@ -5,6 +5,9 @@
     <Build />
   </Project>
   <Folder Name="/Core/">
+    <File Path="src\Directory.Build.props" />
+    <File Path="src\Directory.Build.targets" />
+    <File Path="src\xunit.runner.json" />
     <Project Path="src/Dse.Core/Dse.Core.csproj" />
   </Folder>
   <Folder Name="/Sources/">

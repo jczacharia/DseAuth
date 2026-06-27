@@ -1,5 +1,6 @@
 // Copyright (c) PNC Financial Services. All rights reserved.
 
+using System.Globalization;
 using System.Reflection;
 using Dse;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -48,11 +49,11 @@ public static class HealthCheckEndpoints
         await context.Response.WriteAsJsonAsync(
             new DseHealthReport(
                 report.Status.ToString("G"),
-                report.TotalDuration.ToString("g"),
+                report.TotalDuration.ToString("g", CultureInfo.InvariantCulture),
                 report.Entries.Select(e => new HealthReportEntry(
                     e.Key,
                     e.Value.Status.ToString("G"),
-                    e.Value.Duration.ToString("g"),
+                    e.Value.Duration.ToString("g", CultureInfo.InvariantCulture),
                     e.Value.Description,
                     e.Value.Exception?.Message,
                     e.Value.Data

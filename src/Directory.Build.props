@@ -1,30 +1,6 @@
 <Project>
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <UserSecretsId>dse</UserSecretsId>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <LangVersion>latest</LangVersion>
-    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-    <Deterministic>true</Deterministic>
-
-    <!-- SEVERITY is always-on (.editorconfig): live IDE squiggles + Debug-build warnings, so nothing
-         is hidden. ENFORCEMENT (TreatWarningsAsErrors / EnforceCodeStyleInBuild) is Release-scoped and
-         lives in Directory.Build.targets — $(Configuration) is only reliably resolved there, after the
-         SDK applies its default (it is not yet defaulted at this props import). AnalysisMode=Default
-         (not Recommended): only the rules explicitly escalated in .editorconfig are enforced, so stale
-         pre-C#14 Design/Naming rules can't misfire on extension members. -->
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>Default</AnalysisMode>
-    <NuGetAudit>true</NuGetAudit>
-    <NuGetAuditMode>all</NuGetAuditMode>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <!-- Anchored to this props file's dir (src/), not the consuming project, so it resolves to the
-         repo-root ui regardless of how deep under src/ the project lives. -->
-    <SpaRoot>$(MSBuildThisFileDirectory)../ui</SpaRoot>
-    <NodePrefix>npx --yes -p node@26.3.0 -p pnpm@11.9.0</NodePrefix>
-  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"
+          Condition="Exists($([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../')))" />
 
   <PropertyGroup Condition="'$(IsTestProject)' != 'true'">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

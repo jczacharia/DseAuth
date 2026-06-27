@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <UserSecretsId>dse</UserSecretsId>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Deterministic>true</Deterministic>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisMode>Default</AnalysisMode>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <SpaRoot>$(MSBuildThisFileDirectory)/ui</SpaRoot>
+    <NodePrefix>npx --yes -p node@26.3.0 -p pnpm@11.9.0</NodePrefix>
+  </PropertyGroup>
+</Project>
