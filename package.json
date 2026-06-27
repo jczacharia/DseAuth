@@ -5,14 +5,15 @@
   "type": "module",
   "packageManager": "pnpm@11.9.0",
   "scripts": {
+    "test:ui": "pnpm --filter dse run test",
     "prepare": "husky && dotnet tool restore",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "spell": "cspell --quiet --no-must-find-files \"**/*.{ts,js,html,md,cs}\"",
     "lint": "pnpm --filter dse run lint",
     "lint:fix": "pnpm --filter dse run lint:fix",
-    "fix": "dotnet tool restore && dotnet format Dse.slnx --verbosity detailed --severity info && dotnet csharpier format . && pnpm --filter dse run lint:fix && prettier --write .",
-    "fix:cs": "dotnet tool restore && dotnet format Dse.slnx --verbosity detailed --severity info && dotnet csharpier format .",
+    "fix": "dotnet tool restore && dotnet format Dse.slnx --no-restore --verbosity detailed --severity info && dotnet csharpier format . && pnpm --filter dse run lint:fix && prettier --write .",
+    "fix:cs": "dotnet tool restore && dotnet format Dse.slnx --no-restore --verbosity detailed --severity info && dotnet csharpier format .",
     "csharpier": "dotnet csharpier format .",
     "csharpier:check": "dotnet csharpier check ."
   },

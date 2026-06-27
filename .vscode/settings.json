@@ -12,6 +12,7 @@
 
   // C# is formatted by CSharpier (the local dotnet tool), not Prettier.
   "[csharp]": {
+    "editor.formatOnSave": true,
     "editor.defaultFormatter": "csharpier.csharpier-vscode"
   },
 
