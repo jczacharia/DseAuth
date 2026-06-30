@@ -10,8 +10,8 @@ export default defineConfig(({mode}) => ({
   test: {
     globals: true,
     watch: false,
-    environment: 'jsdom',
     pool: 'vmThreads',
+    environment: 'jsdom',
     setupFiles: ['src/testing/test-setup.ts'],
     include: ['src/**/*.spec.ts'],
     reporters: ['default', ['vitest-sonar-reporter', {outputFile: 'coverage/ut_report.xml'}]],

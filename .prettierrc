@@ -19,13 +19,7 @@
       }
     },
     {
-      "files": "*.svg",
-      "options": {
-        "parser": "html"
-      }
-    },
-    {
-      "files": "*.{csproj,esproj,props,targets}",
+      "files": "*.{svg,csproj,esproj,props,targets}",
       "options": {
         "parser": "html"
       }

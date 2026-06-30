@@ -16,6 +16,10 @@
     "editor.defaultFormatter": "csharpier.csharpier-vscode"
   },
 
+  "files.associations": {
+    "*.{svg,csproj,esproj,props,targets}": "html"
+  },
+
   // ─────────────────────────────────────────────────────────────────────────
   // ESLint — scoped to the ui package only. workingDirectories sets the
   // process cwd to ui, so the extension resolves eslint + eslint.config.ts
